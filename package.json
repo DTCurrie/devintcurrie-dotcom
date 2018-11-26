@@ -1,7 +1,7 @@
 {
   "name": "devintcurrie-dotcom",
   "version": "1.0.0",
-  "description": "",
+  "description": "Personal website for Devin T. Currie, Web Developer",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --open --config webpack.dev.js",
