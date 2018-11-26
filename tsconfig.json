@@ -1,0 +1,22 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": "./src",
+        "module": "commonJs",
+        "moduleResolution": "node",
+        "target": "es5",
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "allowJs": true
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ]
+}
