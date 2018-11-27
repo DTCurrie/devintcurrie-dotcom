@@ -1,0 +1,42 @@
+@import "../../styles/variables";
+
+.loader {
+  position: absolute;
+  display: flex;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  flex: 1 0 auto;
+  align-items: center;
+  justify-content: center;
+  background: $bg-color;
+
+  & &-text {
+    width: 65px;
+
+    &:after {
+      display: inline-block;
+      animation: loader steps(1, end) 1s infinite;
+      content: "";
+    }
+  }
+
+  @keyframes loader {
+    0% {
+      content: "";
+    }
+    25% {
+      content: ".";
+    }
+    50% {
+      content: "..";
+    }
+    75% {
+      content: "...";
+    }
+    100% {
+      content: "";
+    }
+  }
+}

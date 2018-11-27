@@ -3,13 +3,15 @@ const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const webpack = require('webpack');
 
 module.exports = {
     entry: {
         polyfills: './src/polyfills.ts',
-        app: './src/app/app.ts'
+        main: './src/main.ts',
+        styles: './src/styles/styles.ts'
     },
     optimization: {
         usedExports: true,
@@ -54,7 +56,8 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.ts', '.js']
+        extensions: ['.ts', '.js'],
+        plugins: [new TsconfigPathsPlugin()]
     },
     output: {
         filename: '[name].[hash].js',

@@ -1,7 +1,7 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "baseUrl": "./src",
+        "baseUrl": "./src/",
         "module": "commonJs",
         "moduleResolution": "node",
         "target": "es5",
@@ -10,7 +10,11 @@
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
-        "allowJs": true
+        "allowJs": true,
+        "lib": [
+            "dom",
+            "es2015"
+        ]
     },
     "include": [
         "src/**/*"

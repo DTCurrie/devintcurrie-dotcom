@@ -1,18 +1,15 @@
-export class Component {
+import { createComponent } from 'lib/component';
+
+import { Loader } from './loader/loader';
+
+import './app.scss';
+
+export class App {
     constructor() {
-        const element = document.createElement('div');
-        element.innerHTML = `Hello webpack!`;
-        document.body.appendChild(element);
+        const app = createComponent(['app'], '');
+        const loader = new Loader(app);
+        // import('./loader/loader').then((module: { Loader: typeof Loader }) => {
+        //     new module.Loader(app);
+        // });
     }
 }
-
-const test = new Component();
-
-//   if (module.hot) {
-//     module.hot.accept('./print.js', function() {
-//       console.log('Accepting the updated printMe module!');
-//       document.body.removeChild(element);
-//       element = component(); // Re-render the "component" to update the click handler
-//       document.body.appendChild(element);
-//     })
-//   }
