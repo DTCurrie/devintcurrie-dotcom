@@ -1,9 +1,13 @@
 import { createComponent } from 'lib/component';
 
+import SimpleBar from 'simplebar';
+import 'simplebar/dist/simplebar.css';
+
 import './terminal.scss';
 
 export class Terminal implements Init {
     private historyElement: HTMLElement;
+    private historyContent: any;
     private inputForm: HTMLFormElement;
     private inputElement: HTMLInputElement;
 
@@ -15,13 +19,23 @@ export class Terminal implements Init {
         this.init();
     }
 
+    private addLine(text: string, input: boolean = true) {
+        if (input) { text = `> ${text}`; }
+        const line = document.createElement('p');
+        line.classList.add('line');
+        line.innerHTML = text;
+        this.historyContent.getContentElement().appendChild(line);
+
+    }
+
     public init(): void {
+        this.historyContent = new SimpleBar(this.historyElement);
         this.inputForm.addEventListener("submit", (ev: Event) => {
             ev.preventDefault();
-            const line = document.createElement('p');
-            line.classList.add('line');
-            line.innerHTML = this.inputElement.value;
-            this.historyElement.appendChild(line);
+            const text = this.inputElement.value;
+            if (!text || text === '') { return; }
+            this.addLine(text);
+            this.historyContent.getScrollElement().scrollTop = this.historyContent.getScrollElement().scrollHeight;
             this.inputElement.value = '';
         });
 

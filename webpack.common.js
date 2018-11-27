@@ -10,8 +10,9 @@ const webpack = require('webpack');
 module.exports = {
     entry: {
         polyfills: './src/polyfills.ts',
+        vendor: './src/vendor.ts',
+        styles: './src/styles/styles.ts',
         main: './src/main.ts',
-        styles: './src/styles/styles.ts'
     },
     optimization: {
         usedExports: true,
@@ -55,6 +56,13 @@ module.exports = {
                         collapseWhitespace: false
                     }
                 }]
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
+                    "css-loader"
+                ]
             },
             {
                 test: /\.scss$/,

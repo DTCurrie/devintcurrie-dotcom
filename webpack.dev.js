@@ -11,7 +11,7 @@ module.exports = merge(common, {
     devServer: {
         contentBase: path.join(__dirname, 'dist'),
         compress: true,
-        hot: true,
+        hot: true
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin()
