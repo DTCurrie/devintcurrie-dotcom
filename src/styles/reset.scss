@@ -1,5 +1,7 @@
 @import "variables";
 
+// General
+
 *,
 *::before,
 *::after {
@@ -31,6 +33,12 @@ body {
   color: $font-color;
   text-align: left;
   background-color: $bg-color;
+}
+
+// Typography
+
+p {
+  margin: 0 0 1rem;
 }
 
 a {

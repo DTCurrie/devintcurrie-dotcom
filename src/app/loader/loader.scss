@@ -10,10 +10,11 @@
   flex: 1 0 auto;
   align-items: center;
   justify-content: center;
+  font-size: 18px;
   background: $bg-color;
 
   & &-text {
-    width: 65px;
+    width: 72px;
 
     &:after {
       display: inline-block;

@@ -46,6 +46,17 @@ module.exports = {
                 use: 'file-loader'
             },
             {
+                test: /\.html$/,
+                use: [{
+                    loader: 'html-loader',
+                    options: {
+                        minimize: true,
+                        removeComments: false,
+                        collapseWhitespace: false
+                    }
+                }]
+            },
+            {
                 test: /\.scss$/,
                 use: [
                     process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
