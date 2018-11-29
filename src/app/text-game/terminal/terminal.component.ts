@@ -7,7 +7,7 @@ import 'simplebar/dist/simplebar.css';
 
 @Component({
     selector: 'text-game-terminal',
-    templateUrl: 'text-game/terminal/terminal.html',
+    templateUrl: 'text-game/terminal/terminal.component.html',
     stylesUrl: 'text-game/terminal/terminal.component.scss'
 })
 export class Terminal extends HTMLElement implements Init {
