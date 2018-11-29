@@ -8,11 +8,10 @@ import { Component } from 'lib/component';
 })
 export class Loader extends HTMLElement implements Init, Destroy {
 
-    public onInit(): void {
+    onInit(): void {
         this.classList.add('loading');
         wait(3000).then(() => this.onDestroy());
     }
 
-    public onDestroy(): void { this.parentElement.removeChild(this); }
+    onDestroy(): void { this.parentElement.removeChild(this); }
 }
-

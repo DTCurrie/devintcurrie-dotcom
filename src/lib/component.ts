@@ -4,9 +4,8 @@ export function validateComponent(config: ComponentConfig): void {
     if (!config.template && !config.templateUrl) { throw new Error('Components require a template'); }
 }
 
-export function Component(config: ComponentConfig): (constructor: { new(...args: any[]): any }) => void {
-    console.log(config);
-    return async (constructor: { new(...args: any[]): any }) => {
+export function Component(config: ComponentConfig): (constructor: { new(...args: Array<any>): any }) => void {
+    return async (constructor: { new(...args: Array<any>): any }) => {
         validateComponent(config);
 
         if (config.styles || config.stylesUrl) {
@@ -32,21 +31,22 @@ export function Component(config: ComponentConfig): (constructor: { new(...args:
         }
 
         const clone = document.importNode(template.content, true);
+        const proto = constructor.prototype;
 
-        const connectedCallback = constructor.prototype.connectedCallback || (() => { });
-        const disconnectedCallback = constructor.prototype.disconnectedCallback || (() => { });
+        const connectedCallback = proto.connectedCallback || (() => { return; });
+        const disconnectedCallback = proto.disconnectedCallback || (() => { return; });
 
-        constructor.prototype.connectedCallback = function () {
-            this.appendChild(clone);
-            connectedCallback.call(this);
-            if (this.onInit) { this.onInit(); }
+        proto.connectedCallback = () => {
+            proto.appendChild(clone);
+            connectedCallback.call(proto);
+            if (proto.onInit) { proto.onInit(); }
         };
 
-        constructor.prototype.disconnectedCallback = function () {
-            if (this.onDestroy) { this.onDestroy(); }
-            disconnectedCallback.call(this);
+        proto.disconnectedCallback = () => {
+            if (proto.onDestroy) { proto.onDestroy(); }
+            disconnectedCallback.call(proto);
         };
 
         window.customElements.define(config.selector, constructor);
     };
-};
+}

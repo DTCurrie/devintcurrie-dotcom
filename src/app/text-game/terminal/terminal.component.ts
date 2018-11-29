@@ -1,6 +1,6 @@
 import { wait } from 'lib/async';
 import { Component } from 'lib/component';
-import { TypedEvent } from 'lib/typed-event';
+import { EventEmitter } from 'lib/event-emitter';
 
 import SimpleBar from 'simplebar';
 import 'simplebar/dist/simplebar.css';
@@ -18,29 +18,9 @@ export class Terminal extends HTMLElement implements Init {
     private inputForm: HTMLFormElement;
     private inputElement: HTMLInputElement;
 
-    private onInput: TypedEvent<string> = new TypedEvent<string>();
+    private onInput: EventEmitter<string> = new EventEmitter<string>();
 
-    public onInit(): void {
-        this.historyElement = this.querySelector<HTMLElement>('.history');
-        this.inputForm = this.querySelector<HTMLFormElement>('.input');
-        this.inputElement = this.querySelector<HTMLInputElement>('input');
-
-        this.updateDivider();
-
-        this.historyContent = new SimpleBar(this.historyElement.querySelector('.inner'));
-        this.inputElement.disabled = true;
-
-        this.inputForm.addEventListener("submit", (ev: Event) => {
-            ev.preventDefault();
-            this.onInput.emit(this.inputElement.value);
-        });
-
-        window.addEventListener("resize", (ev: UIEvent) => this.updateDivider());
-
-        this.startIntro();
-    }
-
-    private addLine(text: string, input: boolean = true, classList?: string[]): HTMLElement {
+    private addLine(text: string, input = true, classList?: Array<string>): HTMLElement {
         if (input) { text = `> ${text}`; }
 
         const line: HTMLElement = document.createElement('p');
@@ -73,10 +53,10 @@ export class Terminal extends HTMLElement implements Init {
             this.historyElement.classList.remove('filled');
             this.historyElement.classList.add('reset');
             await wait(100);
-            this.historyElement.classList.remove('reset')
+            this.historyElement.classList.remove('reset');
             resolve();
         });
-    }
+    };
 
     private updateDivider(): void {
         const divider = this.historyElement.querySelector('.divider');
@@ -93,11 +73,14 @@ export class Terminal extends HTMLElement implements Init {
         return new Promise<never>(async (resolve: () => void) => {
             this.addLine('Welcome!', false);
 
-            const initText = this.addLine('Initializing Website', false, ['loading']);
+            const initText = this.addLine('Initializing Website', false, [ 'loading' ]);
             await wait(3000).then(() => this.removeLine(initText));
 
-            this.addLine('Website not available! System scan shows the website was moved to locked directory "~/home/site/super-secret-folder".', false);
-            this.addLine('Attempt to unlock? (y/n)', false, ['prompt']);
+            this.addLine(
+                'Website not available! System scan shows the website was moved to locked directory "~/home/site/super-secret-folder".',
+                false);
+
+            this.addLine('Attempt to unlock? (y/n)', false, [ 'prompt' ]);
 
             this.inputElement.disabled = false;
             this.inputElement.focus();
@@ -106,15 +89,15 @@ export class Terminal extends HTMLElement implements Init {
                 this.handleInput(input);
 
                 if (!input.match(/^(y|ye|ye[as]|yeah)|(unlock)$/i)) {
-                    this.addLine('Command not recognized. Attempt to unlock?', false, ['prompt']);
+                    this.addLine('Command not recognized. Attempt to unlock?', false, [ 'prompt' ]);
                     return;
                 }
 
-                const unlockText = this.addLine('Unlocking directory "~/home/site/super-secret-folder"', false, ['loading']);
+                const unlockText = this.addLine('Unlocking directory "~/home/site/super-secret-folder"', false, [ 'loading' ]);
                 await wait(3000).then(() => this.removeLine(unlockText));
 
                 this.addLine('Unlocked directory "~/home/site/super-secret-folder".', false);
-                this.addLine('Executing "super-secret-adventure.exe"', false, ['loading']);
+                this.addLine('Executing "super-secret-adventure.exe"', false, [ 'loading' ]);
 
                 await wait(3000);
 
@@ -125,5 +108,25 @@ export class Terminal extends HTMLElement implements Init {
                 resolve();
             });
         });
+    }
+
+    onInit(): void {
+        this.historyElement = this.querySelector<HTMLElement>('.history');
+        this.inputForm = this.querySelector<HTMLFormElement>('.input');
+        this.inputElement = this.querySelector<HTMLInputElement>('input');
+
+        this.updateDivider();
+
+        this.historyContent = new SimpleBar(this.historyElement.querySelector('.inner'));
+        this.inputElement.disabled = true;
+
+        this.inputForm.addEventListener('submit', (ev: Event) => {
+            ev.preventDefault();
+            this.onInput.emit(this.inputElement.value);
+        });
+
+        window.addEventListener('resize', (ev: UIEvent) => this.updateDivider());
+
+        this.startIntro();
     }
 }
