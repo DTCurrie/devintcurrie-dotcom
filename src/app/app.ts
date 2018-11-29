@@ -1,19 +1,20 @@
-import { createComponent } from 'lib/component';
+import { Component } from 'lib/component';
 
-import { Loader } from './loader/loader';
-import { Terminal } from './terminal/terminal';
+@Component({
+    selector: 'app-root',
+    template: `
+    <main class="app">
+        <text-game-terminal></text-game-terminal>
+    </main>`,
+    stylesUrl: 'app.component.scss'
+})
+export class App extends HTMLElement {
+    connectedCallback() {
+        console.log('connected callback');
+        import('./text-game/text-game');
+    }
 
-import './app.scss';
-
-export class App {
-    constructor() {
-        const app = createComponent(['app'], '');
-        const loader = new Loader(app);
-
-        import('./terminal/terminal').then((module: { Terminal: typeof Terminal }) =>
-            setTimeout(() => {
-                const terminal = new module.Terminal(app);
-                loader.destroy();
-            }, 900));
+    disconnectedCallback() {
+        console.log('disconnected callback');
     }
 }

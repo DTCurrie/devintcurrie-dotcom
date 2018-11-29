@@ -1,4 +1,4 @@
-@import "../../styles/variables";
+@import "../../../styles/variables";
 
 .loader {
   position: absolute;
@@ -15,11 +15,11 @@
 
   & &-text {
     width: 72px;
+  }
 
-    &:after {
-      display: inline-block;
-      animation: ellipsis steps(1, end) 1s infinite;
-      content: "";
-    }
+  &.loading &-text:after {
+    display: inline-block;
+    animation: ellipsis steps(1, end) 1s infinite;
+    content: "";
   }
 }

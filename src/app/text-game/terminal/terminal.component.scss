@@ -1,6 +1,6 @@
-@import "../../styles/variables";
+@import "../../../styles/variables";
 
-.terminal {
+.text-game-terminal {
   position: relative;
   display: block;
   width: 100%;
@@ -8,7 +8,7 @@
   margin: 0 auto;
   padding: 3rem;
 
-  & &-window {
+  .terminal-window {
     position: relative;
     display: block;
     width: 100%;
@@ -25,10 +25,10 @@
 
       &.filled {
         height: 100%;
+      }
 
-        &.reset {
-          height: 0;
-        }
+      &.reset {
+        height: 0;
       }
 
       .inner {

@@ -31,7 +31,7 @@ module.exports = {
         new CleanWebpackPlugin(['dist']),
         new HtmlWebpackPlugin({ template: './src/index.html' }),
         new MiniCssExtractPlugin({
-            filename: "[name].css",
+            filename: "[name].[contenthash].css",
             chunkFilename: "[id].css"
         }),
         new webpack.HashedModuleIdsPlugin()
@@ -61,15 +61,26 @@ module.exports = {
                 test: /\.css$/,
                 use: [
                     process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
-                    "css-loader"
+                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                    'postcss-loader'
                 ]
             },
             {
-                test: /\.scss$/,
+                test: /(?<!\.component)\.scss$/,
                 use: [
                     process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
-                    "css-loader",
-                    "sass-loader"
+                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                    'postcss-loader',
+                    'sass-loader'
+                ]
+            },
+            {
+                test: /\.component\.scss$/,
+                use: [
+                    'css-to-string-loader',
+                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                    'postcss-loader',
+                    'sass-loader'
                 ]
             }
         ]

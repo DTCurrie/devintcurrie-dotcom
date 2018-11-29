@@ -1,5 +1,1 @@
-import { App } from 'app/app';
-
-window.addEventListener("load", (ev: Event) => {
-    new App();
-});
+window.addEventListener('DOMContentLoaded', () => import('./app/app'));
