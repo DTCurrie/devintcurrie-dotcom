@@ -50,6 +50,14 @@
         height: 0;
       }
 
+      &.show-title {
+        padding-top: 72px;
+
+        .line.title {
+          display: block;
+        }
+      }
+
       .inner {
         .simplebar-track.simplebar-vertical {
           padding-top: 22px;
@@ -68,41 +76,37 @@
         font-size: 18px;
         font-family: $font-family-monospace;
         color: $font-color;
-
-        &.prompt {
-          color: $yellow;
-        }
-
-        &.sass {
-          color: $pink;
-        }
-
-        &.art {
-          color: $green;
-          text-align: center;
-        }
-
-        &.title {
-          position: absolute;
-          display: none;
-          top: 24px;
-          left: 0;
-          width: 100%;
-          font-size: 24px;
-          color: $link-color;
-          text-align: center;
-
-          .divider {
-            color: inherit;
-          }
-        }
       }
 
-      &.show-title {
-        padding-top: 64px;
+      .prompt {
+        color: $yellow;
+      }
 
-        .line.title {
-          display: block;
+      .sass {
+        color: $pink;
+      }
+
+      .helper {
+        color: $blue;
+      }
+
+      .art {
+        color: $green;
+        text-align: center;
+      }
+
+      .title {
+        position: absolute;
+        display: none;
+        top: 24px;
+        left: 0;
+        width: 100%;
+        font-size: 24px;
+        color: $link-color;
+        text-align: center;
+
+        .divider {
+          color: inherit;
         }
       }
     }
@@ -133,7 +137,7 @@
           border: 0;
           padding: 0 0 0 40px;
 
-          &-item {
+          .helper {
             margin: 0;
             border: 0;
             display: inline;
@@ -190,12 +194,26 @@
         }
       }
     }
+
+    .art pre {
+      font-size: 0.25rem;
+    }
+  }
+
+  .button {
+    padding: 2px 4px;
+    font-size: 18px;
+    font-family: $font-family-monospace;
+    color: $font-color;
+    background-color: darken($link-color, 7.5);
+  }
+
+  a.button:hover {
+    color: darken($font-color, 7.5);
+    background-color: darken($link-color, 15);
   }
 
   .skip-link {
     float: right;
-    font-size: 18px;
-    font-family: $font-family-monospace;
-    background-color: $bg-color;
   }
 }

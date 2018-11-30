@@ -3,16 +3,18 @@ import { componentFactory } from 'lib/component';
 import { Disposable } from 'lib/event-emitter';
 import { State } from 'lib/state';
 
-import { StartMenuArt } from 'app/text-game/art/start-menu/start-menu-art.component';
 import { TerminalState } from 'app/text-game/terminal/terminal.state';
+
+import { StartMenuArt } from 'app/text-game/art/start-menu/start-menu-art.component';
+import { TerminalNewGameState } from 'app/text-game/terminal/states/new-game.state';
 
 export class TerminalStartMenuState extends TerminalState implements State {
     private inputHandler: Disposable = this.terminal.onInput.on(async (input: string) => {
-        this.terminal.handleInput(input);
+        this.terminal.handleInput(input, [], true);
 
         if (input.match(/^new$/i)) {
             this.terminal.addLine('Starting new game!', false, [ 'prompt' ]);
-            // await this.terminal.stateMachine.transition(new TerminalStartMenuState(this.terminal));
+            await this.terminal.stateMachine.transition(new TerminalNewGameState(this.terminal));
             return;
         }
 
@@ -26,27 +28,28 @@ export class TerminalStartMenuState extends TerminalState implements State {
             return;
         }
 
-        this.terminal.addLine('Command not recognized.', false, [ 'prompt' ]);
+        this.terminal.addLine('Command not recognized.', false, [ 'prompt' ], true);
     });
 
     public onEnter = async (): Promise<void> => (async () => {
-        this.terminal.windowElement.classList.add('show-input-helpers');
+        this.terminal.terminalWindow.classList.add('show-input-helpers');
         this.terminal.historyElement.classList.add('show-title');
-
-        this.terminal.addSpace();
 
         await this.terminal.addLine((await componentFactory<StartMenuArt>('tg-start-menu-art')).outerHTML, false, [ 'art' ]);
         await this.terminal.addLine(
             `Welcome to Spooky Mansion Mystery, a text-based adventure game where you will explore a haunted mansion, find clues, solve
-            puzzles, and finally escape! Don't worry, if you want to skip this and go right to my website, hit the "skip to website"
-            link in the bottom-right corner of the screen, or enter "skip".`,
+            puzzles, and finally escape! Don't worry, if you want to skip this and go right to my website, use the
+            <span class="button">skip to website</span> button in the bottom-right corner of the screen, or enter
+            <span class="helper">skip</span>.`,
             false, [ 'prompt' ]);
+
+        this.terminal.addSpace();
 
         this.terminal.helpersElement.innerHTML = `
             <ul class="helpers-list">
-                <li class="helpers-list-item new">new</li>
-                <li class="helpers-list-item load">load</li>
-                <li class="helpers-list-item skip">skip</li>
+                <li class="helper">new</li>
+                <li class="helper">load</li>
+                <li class="helper">skip</li>
             </ul>`;
 
         this.terminal.helpersElement.querySelectorAll('.helpers-list-item').forEach((element: HTMLLIElement): void => {
@@ -57,9 +60,14 @@ export class TerminalStartMenuState extends TerminalState implements State {
                 this.terminal.inputElement.focus();
             });
         });
+
+        await wait(100);
+        this.terminal.inputElement.focus();
     })();
 
     public onExit(to: State): void {
         this.inputHandler.dispose();
+        this.terminal.clear();
+        this.terminal.helpersElement.innerHTML = '';
     }
 }

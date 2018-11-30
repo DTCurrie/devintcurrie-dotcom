@@ -14,11 +14,11 @@ import { TerminalIntroState } from 'app/text-game/terminal/states/intro.state';
     stylesUrl: 'text-game/terminal/terminal.component.scss'
 })
 export class Terminal extends Component implements Init {
-    private historyContent: any;
+    private simplebar: any;
 
     private inputForm: HTMLFormElement;
 
-    public windowElement: HTMLElement;
+    public terminalWindow: HTMLElement;
     public historyElement: HTMLElement;
     public helpersElement: HTMLElement;
     public inputElement: HTMLInputElement;
@@ -26,6 +26,9 @@ export class Terminal extends Component implements Init {
     public onInput: EventEmitter<string> = new EventEmitter<string>();
 
     public stateMachine: StateMachine = new StateMachine();
+
+    private get historyContent(): Element { return this.simplebar.getContentElement(); }
+    private get historyScroll(): Element { return this.simplebar.getScrollElement(); }
 
     private updateDivider(): void {
         const divider = this.historyElement.querySelector('.divider');
@@ -38,8 +41,9 @@ export class Terminal extends Component implements Init {
         divider.innerHTML = content;
     }
 
-    public async addLine(text: string, input = true, classList?: Array<string>): Promise<HTMLElement> {
+    public async addLine(text: string, input = true, classList?: Array<string>, deleteLast?: boolean): Promise<HTMLElement> {
         if (input) { text = `> ${text}`; }
+        if (deleteLast) { this.historyContent.removeChild(this.historyContent.lastChild); }
 
         const line: HTMLElement = document.createElement('p');
 
@@ -47,47 +51,48 @@ export class Terminal extends Component implements Init {
         if (classList) { line.classList.add(...classList); }
 
         line.innerHTML = text;
-        this.historyContent.getContentElement().appendChild(line);
+        this.historyContent.appendChild(line);
 
-        if (this.historyContent.getScrollElement().scrollHeight >= this.historyElement.scrollHeight) {
-            this.historyElement.classList.add('filled');
-        }
-
-        this.historyContent.getScrollElement().scrollTop = this.historyContent.getScrollElement().scrollHeight;
+        if (this.historyScroll.scrollHeight >= this.historyElement.scrollHeight) { this.historyElement.classList.add('filled'); }
+        this.historyScroll.scrollTop = this.historyScroll.scrollHeight;
 
         return line;
     }
 
     public async addSpace(): Promise<void> { this.addLine('&nbsp;', false); }
 
-    public handleInput(text: string, deleteLast?: boolean): void {
+    public handleInput(text: string, classList?: Array<string>, deleteLast?: boolean): void {
         if (!text || text === '') { return; }
-        this.addLine(text);
+        if (deleteLast) { this.historyContent.removeChild(this.historyContent.lastChild); }
+        this.addLine(text, true, classList);
         this.inputElement.value = '';
     }
 
-    public removeLine(line: HTMLElement): void { this.historyContent.getContentElement().removeChild(line); }
+    public removeLine(line: HTMLElement): void { this.historyContent.removeChild(line); }
 
     public async clear(): Promise<void> {
         this.inputForm.classList.add('hide');
-        this.historyContent.getContentElement().innerHTML = '';
+        this.historyContent.innerHTML = '';
+
         this.historyElement.classList.remove('filled');
         this.historyElement.classList.add('reset');
+
         await wait(100);
+
         this.historyElement.classList.remove('reset');
         this.inputForm.classList.remove('hide');
     }
 
     public onInit(): void {
-        this.windowElement = this.querySelector<HTMLElement>('.terminal-window');
-        this.historyElement = this.windowElement.querySelector<HTMLElement>('.history');
-        this.inputForm = this.windowElement.querySelector<HTMLFormElement>('.input');
+        this.terminalWindow = this.querySelector<HTMLElement>('.terminal-window');
+        this.historyElement = this.terminalWindow.querySelector<HTMLElement>('.history');
+        this.inputForm = this.terminalWindow.querySelector<HTMLFormElement>('.input');
         this.helpersElement = this.inputForm.querySelector<HTMLFormElement>('.helpers');
         this.inputElement = this.inputForm.querySelector<HTMLInputElement>('input');
 
         this.updateDivider();
 
-        this.historyContent = new SimpleBar(this.historyElement.querySelector('.inner'));
+        this.simplebar = new SimpleBar(this.historyElement.querySelector('.inner'));
         this.inputElement.disabled = true;
 
         this.inputForm.addEventListener('submit', (ev: Event) => {
