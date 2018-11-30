@@ -6,10 +6,7 @@
             "allow-static-only",
             "allow-empty-class"
         ],
-        "member-access": [
-            true,
-            "no-public"
-        ],
+        "member-access": true,
         "member-ordering": [
             true,
             {
@@ -40,8 +37,7 @@
             "allow-protected"
         ],
         "no-invalid-this": [
-            true,
-            "check-function-in-method"
+            true
         ],
         "no-duplicate-super": true,
         "new-parens": true,
@@ -56,10 +52,7 @@
             "allow-declarations",
             "allow-named-functions"
         ],
-        "arrow-parens": [
-            true,
-            "ban-single-arg-parens"
-        ],
+        "arrow-parens": true,
         "arrow-return-shorthand": true,
         "no-return-await": true,
         "prefer-const": true,
@@ -198,7 +191,7 @@
                 "constructor": "never"
             }
         ],
-        "space-within-parens": 0,
+        "space-within-parens": false,
         "import-spacing": true,
         "no-trailing-whitespace": true,
         "one-line": [
@@ -277,7 +270,6 @@
             "allow-fast-null-checks"
         ],
         "no-empty": true,
-        "no-sparse-arrays": true,
-        "banana-in-box": true
+        "no-sparse-arrays": true
     }
 }

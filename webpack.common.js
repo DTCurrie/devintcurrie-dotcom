@@ -42,8 +42,8 @@ module.exports = {
                 test: /\.ts?$/,
                 enforce: 'pre',
                 use: [
-                    'tslint-loader',
-                    'ts-loader'
+                    'ts-loader',
+                    'tslint-loader'
                 ]
             },
             {

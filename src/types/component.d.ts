@@ -6,12 +6,17 @@ declare interface ComponentConfig {
     stylesUrl?: string;
 }
 
-declare function Component(config: ComponentConfig): (constructor: { new(...args: any[]): any }) => void;
+declare interface Component extends HTMLElement {
+    connectedCallback?(): void;
+    disconnectedCallback?(): void;
+}
 
-declare interface Init {
+declare function Component(config: ComponentConfig): (constructor: { new(...args: Array<any>): any }) => void;
+
+declare interface Init extends Component {
     onInit(): void;
 }
 
-declare interface Destroy {
+declare interface Destroy extends Component {
     onDestroy(): void;
 }
