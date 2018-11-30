@@ -53,15 +53,16 @@ export class Terminal extends Component implements Init {
             this.historyElement.classList.add('filled');
         }
 
+        this.historyContent.getScrollElement().scrollTop = this.historyContent.getScrollElement().scrollHeight;
+
         return line;
     }
 
     public async addSpace(): Promise<void> { this.addLine('&nbsp;', false); }
 
-    public handleInput(text: string): void {
+    public handleInput(text: string, deleteLast?: boolean): void {
         if (!text || text === '') { return; }
         this.addLine(text);
-        this.historyContent.getScrollElement().scrollTop = this.historyContent.getScrollElement().scrollHeight;
         this.inputElement.value = '';
     }
 
