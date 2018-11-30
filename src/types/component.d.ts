@@ -11,7 +11,9 @@ declare interface Component extends HTMLElement {
     disconnectedCallback?(): void;
 }
 
-declare function Component(config: ComponentConfig): (constructor: { new(...args: Array<any>): any }) => void;
+declare function Component(config: ComponentConfig): (constructor: { new(...args: Array<any>): Component }) => void;
+
+declare interface ComponentConstructor<T> { new(...args: Array<any>): T; }
 
 declare interface Init extends Component {
     onInit(): void;

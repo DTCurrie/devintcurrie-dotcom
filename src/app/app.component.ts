@@ -4,7 +4,7 @@ import { Component, component } from 'lib/component';
     selector: 'app-root',
     template: `
     <main class="app">
-        <text-game-terminal></text-game-terminal>
+        <tg-terminal></tg-terminal>
     </main>`,
     stylesUrl: 'app.component.scss'
 })

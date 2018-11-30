@@ -6,10 +6,10 @@ import { StateMachine } from 'lib/state';
 import SimpleBar from 'simplebar';
 import 'simplebar/dist/simplebar.css';
 
-import { TerminalIntroState } from 'app/text-game/terminal/terminal.states';
+import { TerminalIntroState } from 'app/text-game/terminal/states/intro.state';
 
 @component({
-    selector: 'text-game-terminal',
+    selector: 'tg-terminal',
     templateUrl: 'text-game/terminal/terminal.component.html',
     stylesUrl: 'text-game/terminal/terminal.component.scss'
 })
@@ -18,9 +18,11 @@ export class Terminal extends Component implements Init {
 
     private inputForm: HTMLFormElement;
 
+    public windowElement: HTMLElement;
     public historyElement: HTMLElement;
-
+    public helpersElement: HTMLElement;
     public inputElement: HTMLInputElement;
+
     public onInput: EventEmitter<string> = new EventEmitter<string>();
 
     public stateMachine: StateMachine = new StateMachine();
@@ -36,7 +38,7 @@ export class Terminal extends Component implements Init {
         divider.innerHTML = content;
     }
 
-    public addLine(text: string, input = true, classList?: Array<string>): HTMLElement {
+    public async addLine(text: string, input = true, classList?: Array<string>): Promise<HTMLElement> {
         if (input) { text = `> ${text}`; }
 
         const line: HTMLElement = document.createElement('p');
@@ -54,6 +56,8 @@ export class Terminal extends Component implements Init {
         return line;
     }
 
+    public async addSpace(): Promise<void> { this.addLine('&nbsp;', false); }
+
     public handleInput(text: string): void {
         if (!text || text === '') { return; }
         this.addLine(text);
@@ -63,21 +67,22 @@ export class Terminal extends Component implements Init {
 
     public removeLine(line: HTMLElement): void { this.historyContent.getContentElement().removeChild(line); }
 
-    public clear = async (): Promise<never> => {
-        return new Promise<never>(async (resolve: () => void) => {
-            this.historyContent.getContentElement().innerHTML = '';
-            this.historyElement.classList.remove('filled');
-            this.historyElement.classList.add('reset');
-            await wait(100);
-            this.historyElement.classList.remove('reset');
-            resolve();
-        });
-    };
+    public async clear(): Promise<void> {
+        this.inputForm.classList.add('hide');
+        this.historyContent.getContentElement().innerHTML = '';
+        this.historyElement.classList.remove('filled');
+        this.historyElement.classList.add('reset');
+        await wait(100);
+        this.historyElement.classList.remove('reset');
+        this.inputForm.classList.remove('hide');
+    }
 
     public onInit(): void {
-        this.historyElement = this.querySelector<HTMLElement>('.history');
-        this.inputForm = this.querySelector<HTMLFormElement>('.input');
-        this.inputElement = this.querySelector<HTMLInputElement>('input');
+        this.windowElement = this.querySelector<HTMLElement>('.terminal-window');
+        this.historyElement = this.windowElement.querySelector<HTMLElement>('.history');
+        this.inputForm = this.windowElement.querySelector<HTMLFormElement>('.input');
+        this.helpersElement = this.inputForm.querySelector<HTMLFormElement>('.helpers');
+        this.inputElement = this.inputForm.querySelector<HTMLInputElement>('input');
 
         this.updateDivider();
 
@@ -91,6 +96,6 @@ export class Terminal extends Component implements Init {
 
         window.addEventListener('resize', (ev: UIEvent) => this.updateDivider());
 
-        wait(3000).then(() => this.stateMachine.transition(new TerminalIntroState(this)));
+        wait(2000).then(() => this.stateMachine.transition(new TerminalIntroState(this)));
     }
 }

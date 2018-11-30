@@ -5,8 +5,8 @@ export function validateComponent(config: ComponentConfig): void {
 
 export class Component extends HTMLElement implements Component { }
 
-export function component(config: ComponentConfig): (constructor: { new(...args: Array<any>): any }) => void {
-    return async (constructor: { new(...args: Array<any>): Component }) => {
+export function component<T>(config: ComponentConfig): (constructor: ComponentConstructor<T>) => void {
+    return async (constructor: ComponentConstructor<T>) => {
         validateComponent(config);
 
         if (config.styles || config.stylesUrl) {
@@ -52,4 +52,9 @@ export function component(config: ComponentConfig): (constructor: { new(...args:
 
         window.customElements.define(config.selector, constructor);
     };
+}
+
+export async function componentFactory<T extends Component>(selector: string): Promise<T> {
+    const ctor = window.customElements.get(selector);
+    return await new ctor() as T;
 }

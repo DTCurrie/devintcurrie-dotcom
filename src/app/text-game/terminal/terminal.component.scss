@@ -16,6 +16,25 @@
     border: 1px solid $font-color;
     border-radius: 24px;
 
+    &.show-input-helpers {
+      .history {
+        padding-bottom: 64px;
+      }
+
+      .input {
+        height: 64px;
+        top: -64px;
+
+        .helpers {
+          display: block;
+        }
+
+        .field {
+          padding-top: 20px;
+        }
+      }
+    }
+
     .history {
       position: relative;
       display: block;
@@ -59,7 +78,16 @@
         }
 
         &.prompt {
-          color: #e0e041;
+          color: $yellow;
+        }
+
+        &.sass {
+          color: $pink;
+        }
+
+        &.art {
+          color: $green;
+          text-align: center;
         }
 
         &.title {
@@ -79,7 +107,7 @@
       }
 
       &.show-title {
-        padding: 64px 22px 44px;
+        padding-top: 64px;
 
         .line.title {
           display: block;
@@ -99,29 +127,69 @@
       color: $font-color;
       background-color: $bg-color;
 
-      .prefix {
+      .helpers {
         position: absolute;
-        display: block;
-        left: 22px;
-        padding-top: 7px;
+        display: none;
+        width: 100%;
+        height: 20px;
+        top: 0;
+        left: 0;
+
+        ul {
+          margin: 0;
+          border: 0;
+          padding: 0 0 0 40px;
+
+          li {
+            margin: 0;
+            border: 0;
+            display: inline;
+            color: $blue;
+
+            &:first-child {
+              padding-right: 4px;
+            }
+
+            &:last-child {
+              padding-left: 4px;
+            }
+
+            &:not(:first-child),
+            &:not(:last-child) {
+              padding: 0 4px;
+            }
+          }
+        }
       }
 
-      input {
+      .field {
         position: relative;
         bottom: 0;
-        width: 100%;
-        height: 32px;
-        margin-bottom: 12px;
-        border: none;
-        padding: 0 12px 0 40px;
-        font-size: inherit;
-        font-family: inherit;
-        color: inherit;
-        background: transparent;
 
-        &:hover,
-        &:focus {
-          outline: none;
+        .prefix {
+          position: absolute;
+          display: block;
+          left: 22px;
+          padding-top: 7px;
+        }
+
+        input {
+          position: relative;
+          bottom: 0;
+          width: 100%;
+          height: 32px;
+          margin-bottom: 12px;
+          border: none;
+          padding: 0 12px 0 40px;
+          font-size: inherit;
+          font-family: inherit;
+          color: inherit;
+          background: transparent;
+
+          &:hover,
+          &:focus {
+            outline: none;
+          }
         }
       }
     }

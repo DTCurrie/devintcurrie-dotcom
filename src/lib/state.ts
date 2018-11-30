@@ -1,6 +1,6 @@
 export interface State {
-    onEnter(from?: State): Promise<void>;
-    onExit(to?: State): Promise<void>;
+    onEnter(from?: State): void | Promise<void>;
+    onExit(to?: State): void | Promise<void>;
 }
 
 export class StateMachine {
