@@ -1,46 +1,44 @@
 import { wait } from 'lib/async';
-import { Component } from 'lib/component';
-import { TypedEvent } from 'lib/typed-event';
+import { Component, component } from 'lib/component';
+import { EventEmitter } from 'lib/event-emitter';
+import { StateMachine } from 'lib/state';
 
 import SimpleBar from 'simplebar';
 import 'simplebar/dist/simplebar.css';
 
-@Component({
-    selector: 'text-game-terminal',
+import { TerminalIntroState } from 'app/text-game/terminal/states/intro.state';
+
+@component({
+    selector: 'tg-terminal',
     templateUrl: 'text-game/terminal/terminal.component.html',
     stylesUrl: 'text-game/terminal/terminal.component.scss'
 })
-export class Terminal extends HTMLElement implements Init {
-
-    private historyElement: HTMLElement;
+export class Terminal extends Component implements Init {
     private historyContent: any;
 
     private inputForm: HTMLFormElement;
-    private inputElement: HTMLInputElement;
 
-    private onInput: TypedEvent<string> = new TypedEvent<string>();
+    public windowElement: HTMLElement;
+    public historyElement: HTMLElement;
+    public helpersElement: HTMLElement;
+    public inputElement: HTMLInputElement;
 
-    public onInit(): void {
-        this.historyElement = this.querySelector<HTMLElement>('.history');
-        this.inputForm = this.querySelector<HTMLFormElement>('.input');
-        this.inputElement = this.querySelector<HTMLInputElement>('input');
+    public onInput: EventEmitter<string> = new EventEmitter<string>();
 
-        this.updateDivider();
+    public stateMachine: StateMachine = new StateMachine();
 
-        this.historyContent = new SimpleBar(this.historyElement.querySelector('.inner'));
-        this.inputElement.disabled = true;
+    private updateDivider(): void {
+        const divider = this.historyElement.querySelector('.divider');
+        const character = divider.getAttribute('data-character');
+        const count = Math.floor(this.historyElement.clientWidth / 10);
 
-        this.inputForm.addEventListener("submit", (ev: Event) => {
-            ev.preventDefault();
-            this.onInput.emit(this.inputElement.value);
-        });
+        let content = '';
 
-        window.addEventListener("resize", (ev: UIEvent) => this.updateDivider());
-
-        this.startIntro();
+        for (let i = 0; i < count; i++) { content += character; }
+        divider.innerHTML = content;
     }
 
-    private addLine(text: string, input: boolean = true, classList?: string[]): HTMLElement {
+    public async addLine(text: string, input = true, classList?: Array<string>): Promise<HTMLElement> {
         if (input) { text = `> ${text}`; }
 
         const line: HTMLElement = document.createElement('p');
@@ -55,75 +53,50 @@ export class Terminal extends HTMLElement implements Init {
             this.historyElement.classList.add('filled');
         }
 
+        this.historyContent.getScrollElement().scrollTop = this.historyContent.getScrollElement().scrollHeight;
+
         return line;
     }
 
-    private handleInput(text: string): void {
+    public async addSpace(): Promise<void> { this.addLine('&nbsp;', false); }
+
+    public handleInput(text: string, deleteLast?: boolean): void {
         if (!text || text === '') { return; }
         this.addLine(text);
-        this.historyContent.getScrollElement().scrollTop = this.historyContent.getScrollElement().scrollHeight;
         this.inputElement.value = '';
     }
 
-    private removeLine(line: HTMLElement): void { this.historyContent.getContentElement().removeChild(line); }
+    public removeLine(line: HTMLElement): void { this.historyContent.getContentElement().removeChild(line); }
 
-    private clear = async (): Promise<never> => {
-        return new Promise<never>(async (resolve: () => void) => {
-            this.historyContent.getContentElement().innerHTML = '';
-            this.historyElement.classList.remove('filled');
-            this.historyElement.classList.add('reset');
-            await wait(100);
-            this.historyElement.classList.remove('reset')
-            resolve();
-        });
+    public async clear(): Promise<void> {
+        this.inputForm.classList.add('hide');
+        this.historyContent.getContentElement().innerHTML = '';
+        this.historyElement.classList.remove('filled');
+        this.historyElement.classList.add('reset');
+        await wait(100);
+        this.historyElement.classList.remove('reset');
+        this.inputForm.classList.remove('hide');
     }
 
-    private updateDivider(): void {
-        const divider = this.historyElement.querySelector('.divider');
-        const character = divider.getAttribute('data-character');
-        const count = Math.floor(this.historyElement.clientWidth / 10);
+    public onInit(): void {
+        this.windowElement = this.querySelector<HTMLElement>('.terminal-window');
+        this.historyElement = this.windowElement.querySelector<HTMLElement>('.history');
+        this.inputForm = this.windowElement.querySelector<HTMLFormElement>('.input');
+        this.helpersElement = this.inputForm.querySelector<HTMLFormElement>('.helpers');
+        this.inputElement = this.inputForm.querySelector<HTMLInputElement>('input');
 
-        let content = '';
+        this.updateDivider();
 
-        for (let i = 0; i < count; i++) { content += character; }
-        divider.innerHTML = content;
-    }
+        this.historyContent = new SimpleBar(this.historyElement.querySelector('.inner'));
+        this.inputElement.disabled = true;
 
-    private async startIntro(): Promise<never> {
-        return new Promise<never>(async (resolve: () => void) => {
-            this.addLine('Welcome!', false);
-
-            const initText = this.addLine('Initializing Website', false, ['loading']);
-            await wait(3000).then(() => this.removeLine(initText));
-
-            this.addLine('Website not available! System scan shows the website was moved to locked directory "~/home/site/super-secret-folder".', false);
-            this.addLine('Attempt to unlock? (y/n)', false, ['prompt']);
-
-            this.inputElement.disabled = false;
-            this.inputElement.focus();
-
-            const listener = this.onInput.on(async (input: string) => {
-                this.handleInput(input);
-
-                if (!input.match(/^(y|ye|ye[as]|yeah)|(unlock)$/i)) {
-                    this.addLine('Command not recognized. Attempt to unlock?', false, ['prompt']);
-                    return;
-                }
-
-                const unlockText = this.addLine('Unlocking directory "~/home/site/super-secret-folder"', false, ['loading']);
-                await wait(3000).then(() => this.removeLine(unlockText));
-
-                this.addLine('Unlocked directory "~/home/site/super-secret-folder".', false);
-                this.addLine('Executing "super-secret-adventure.exe"', false, ['loading']);
-
-                await wait(3000);
-
-                this.clear();
-                this.historyElement.classList.add('show-title');
-
-                listener.dispose();
-                resolve();
-            });
+        this.inputForm.addEventListener('submit', (ev: Event) => {
+            ev.preventDefault();
+            this.onInput.emit(this.inputElement.value);
         });
+
+        window.addEventListener('resize', (ev: UIEvent) => this.updateDivider());
+
+        wait(2000).then(() => this.stateMachine.transition(new TerminalIntroState(this)));
     }
 }

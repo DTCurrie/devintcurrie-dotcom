@@ -1,11 +1,11 @@
-import { Component } from 'lib/component';
+import { Component, component } from 'lib/component';
 
-@Component({
+@component({
     selector: 'app-root',
     template: `
     <main class="app">
-        <text-game-terminal></text-game-terminal>
+        <tg-terminal></tg-terminal>
     </main>`,
     stylesUrl: 'app.component.scss'
 })
-export class App extends HTMLElement { }
+export class App extends Component { }

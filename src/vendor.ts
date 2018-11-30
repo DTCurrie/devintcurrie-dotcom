@@ -1,1 +1,1 @@
-declare module 'simplebar';
+import 'normalize.css/normalize.css';

@@ -15,6 +15,11 @@
         "lib": [
             "dom",
             "es2015"
+        ],
+        "types": [
+            "node",
+            "webpack",
+            "webpack-env"
         ]
     },
     "include": [

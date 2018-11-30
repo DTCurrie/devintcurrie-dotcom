@@ -1,6 +1,13 @@
-$font-color: #dddddd;
+$white: #dddddd;
+$black: #222222;
+$blue: #35c5e8;
+$yellow: #e0e041;
+$green: #84de59;
+$pink: #e060da;
+
+$font-color: $white;
 $font-family: sans-serif;
 $font-family-monospace: "VT323", monospace;
-$bg-color: #222222;
+$bg-color: $black;
 
-$link-color: #35c5e8;
+$link-color: $blue;

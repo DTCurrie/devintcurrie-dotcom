@@ -1,18 +1,11 @@
 import { wait } from 'lib/async';
-import { Component } from 'lib/component';
+import { Component, component } from 'lib/component';
 
-@Component({
-    selector: 'text-game-loader',
-    template: '<div class="loader"><code class="loader-text">loading</code>',
+@component({
+    selector: 'tg-loader',
+    template: '<div class="loader"><code class="loader-text loading">loading</code></div>',
     stylesUrl: 'text-game/loader/loader.component.scss'
 })
-export class Loader extends HTMLElement implements Init, Destroy {
-
-    public onInit(): void {
-        this.classList.add('loading');
-        wait(3000).then(() => this.onDestroy());
-    }
-
-    public onDestroy(): void { this.parentElement.removeChild(this); }
+export class Loader extends Component implements Init {
+    public onInit(): void { wait(2000).then(() => this.parentElement.removeChild(this)); }
 }
-

@@ -28,7 +28,7 @@ module.exports = {
         }
     },
     plugins: [
-        new CleanWebpackPlugin(['dist']),
+        new CleanWebpackPlugin([ 'dist' ]),
         new HtmlWebpackPlugin({ template: './src/index.html' }),
         new MiniCssExtractPlugin({
             filename: "[name].[contenthash].css",
@@ -40,7 +40,11 @@ module.exports = {
         rules: [
             {
                 test: /\.ts?$/,
-                use: 'ts-loader'
+                enforce: 'pre',
+                use: [
+                    'ts-loader',
+                    'tslint-loader'
+                ]
             },
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
@@ -48,14 +52,14 @@ module.exports = {
             },
             {
                 test: /\.html$/,
-                use: [{
+                use: [ {
                     loader: 'html-loader',
                     options: {
                         minimize: true,
                         removeComments: false,
                         collapseWhitespace: false
                     }
-                }]
+                } ]
             },
             {
                 test: /\.css$/,
@@ -86,8 +90,8 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.ts', '.js'],
-        plugins: [new TsconfigPathsPlugin()]
+        extensions: [ '.ts', '.js' ],
+        plugins: [ new TsconfigPathsPlugin() ]
     },
     output: {
         filename: '[name].[hash].js',
