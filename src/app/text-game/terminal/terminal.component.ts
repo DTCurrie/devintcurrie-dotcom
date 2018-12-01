@@ -1,13 +1,12 @@
+import SimpleBar from 'simplebar';
+
 import { wait } from 'lib/async';
 import { Component, component } from 'lib/component';
 import { EventEmitter } from 'lib/event-emitter';
 import { StateMachine } from 'lib/state';
 
-import SimpleBar from 'simplebar';
-import 'simplebar/dist/simplebar.css';
-
 import { TerminalStateService } from 'app/text-game/terminal/terminal-state.service';
-import { TerminalIntroState, TerminalStartMenuState } from 'app/text-game/terminal/states';
+import { TerminalIntroState, TerminalNewGameState, TerminalStartMenuState } from 'app/text-game/terminal/states';
 
 @component({
     selector: 'tg-terminal',
@@ -28,8 +27,8 @@ export class Terminal extends Component implements Init {
 
     public stateMachine: StateMachine = new StateMachine();
 
-    private get historyContent(): Element { return this.simplebar.getContentElement(); }
-    private get historyScroll(): Element { return this.simplebar.getScrollElement(); }
+    public get historyContent(): Element { return this.simplebar.getContentElement(); }
+    public get historyScroll(): Element { return this.simplebar.getScrollElement(); }
 
     private updateDivider(): void {
         const divider = this.historyElement.querySelector('.divider');
@@ -107,12 +106,13 @@ export class Terminal extends Component implements Init {
 
         const state = TerminalStateService.loadState();
         if (state) {
-            if (state.key === 'intro') {
-                this.stateMachine.transition(new TerminalIntroState(this));
+            if (state.key === 'start-menu') {
+                this.stateMachine.transition(new TerminalStartMenuState(this));
                 return;
             }
 
-            if (state.key === 'start-menu') {
+            if (state.key === 'new-game') {
+                // this.stateMachine.transition(new TerminalNewGameState(this));
                 this.stateMachine.transition(new TerminalStartMenuState(this));
                 return;
             }

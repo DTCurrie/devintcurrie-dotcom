@@ -29,8 +29,6 @@ export class TerminalIntroState extends TerminalState implements State {
     });
 
     public onEnter = async (): Promise<void> => (async () => {
-        TerminalStateService.saveState({ key: 'intro' });
-
         this.terminal.addLine('Welcome!', false);
 
         const initText = await this.terminal.addLine('Initializing Website', false, [ 'loading' ]);

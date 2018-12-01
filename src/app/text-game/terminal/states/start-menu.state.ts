@@ -10,17 +10,14 @@ import { TerminalStateService } from 'app/text-game/terminal/terminal-state.serv
 import { TerminalNewGameState } from 'app/text-game/terminal/states/new-game.state';
 
 export class TerminalStartMenuState extends TerminalState implements State {
+    private animationTicker: number = window.setTimeout(async () => this.mangle(), 500);
+
     private inputHandler: Disposable = this.terminal.onInput.on(async (input: string) => {
         this.terminal.handleInput(input, [], true);
 
         if (input.match(/^new$/i)) {
             this.terminal.addLine('Starting new game!', false, [ 'prompt' ]);
             await this.terminal.stateMachine.transition(new TerminalNewGameState(this.terminal));
-            return;
-        }
-
-        if (input.match(/^load$/i)) {
-            this.terminal.addLine('Loading saved game!', false, [ 'prompt' ]);
             return;
         }
 
@@ -32,13 +29,32 @@ export class TerminalStartMenuState extends TerminalState implements State {
         this.terminal.addLine('Command not recognized.', false, [ 'prompt' ], true);
     });
 
+    private async mangle(): Promise<void> {
+        const art = this.terminal.historyContent.querySelector('.art pre');
+        const artText = art.textContent;
+        const replaceAll = async (original: string, replacement: string) => artText.split(original).join(replacement);
+
+        art.innerHTML = await replaceAll('/', "'");
+        await wait(500);
+        art.innerHTML = await replaceAll('+', '_');
+        await wait(500);
+        art.innerHTML = await replaceAll('"', '|');
+        await wait(500);
+        art.innerHTML = await replaceAll('`', ' ');
+        await wait(500);
+        art.innerHTML = await replaceAll('*', '.');
+
+        art.innerHTML = artText;
+        window.setTimeout(async () => this.mangle(), 500);
+    }
+
     public onEnter = async (): Promise<void> => (async () => {
         TerminalStateService.saveState({ key: 'start-menu' });
 
         this.terminal.terminalWindow.classList.add('show-input-helpers');
         this.terminal.historyElement.classList.add('show-title');
 
-        await this.terminal.addLine((await componentFactory<StartMenuArt>('tg-start-menu-art')).outerHTML, false, [ 'art' ]);
+        await this.terminal.addLine((await componentFactory<StartMenuArt>('tg-start-menu-art')).outerHTML, false);
         await this.terminal.addLine(
             `Welcome to Spooky Mansion Mystery, a text-based adventure game where you will explore a haunted mansion, find clues, solve
             puzzles, and finally escape! Don't worry, if you want to skip this and go right to my website, use the
@@ -51,7 +67,6 @@ export class TerminalStartMenuState extends TerminalState implements State {
         this.terminal.helpersElement.innerHTML = `
             <ul class="helpers-list">
                 <li class="helper">new</li>
-                <li class="helper">load</li>
                 <li class="helper">skip</li>
             </ul>`;
 
@@ -65,11 +80,13 @@ export class TerminalStartMenuState extends TerminalState implements State {
         });
 
         await wait(100);
+        this.terminal.inputElement.disabled = false;
         this.terminal.inputElement.focus();
     })();
 
     public onExit(to: State): void {
         this.inputHandler.dispose();
+        clearInterval(this.animationTicker);
         this.terminal.clear();
         this.terminal.helpersElement.innerHTML = '';
     }
