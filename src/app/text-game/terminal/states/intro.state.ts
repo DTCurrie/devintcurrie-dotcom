@@ -3,7 +3,9 @@ import { Disposable } from 'lib/event-emitter';
 import { State } from 'lib/state';
 
 import { TerminalStartMenuState } from 'app/text-game/terminal/states/start-menu.state';
-import { TerminalState } from 'app/text-game/terminal/terminal.state';
+
+import { TerminalState } from 'app/text-game/terminal/terminal-state';
+import { TerminalStateService } from 'app/text-game/terminal/terminal-state.service';
 
 export class TerminalIntroState extends TerminalState implements State {
     private inputHandler: Disposable = this.terminal.onInput.on(async (input: string) => {
@@ -27,6 +29,8 @@ export class TerminalIntroState extends TerminalState implements State {
     });
 
     public onEnter = async (): Promise<void> => (async () => {
+        TerminalStateService.saveState({ key: 'intro' });
+
         this.terminal.addLine('Welcome!', false);
 
         const initText = await this.terminal.addLine('Initializing Website', false, [ 'loading' ]);

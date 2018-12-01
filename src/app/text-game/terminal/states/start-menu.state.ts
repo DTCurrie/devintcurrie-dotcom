@@ -3,9 +3,10 @@ import { componentFactory } from 'lib/component';
 import { Disposable } from 'lib/event-emitter';
 import { State } from 'lib/state';
 
-import { TerminalState } from 'app/text-game/terminal/terminal.state';
-
 import { StartMenuArt } from 'app/text-game/art/start-menu/start-menu-art.component';
+
+import { TerminalState } from 'app/text-game/terminal/terminal-state';
+import { TerminalStateService } from 'app/text-game/terminal/terminal-state.service';
 import { TerminalNewGameState } from 'app/text-game/terminal/states/new-game.state';
 
 export class TerminalStartMenuState extends TerminalState implements State {
@@ -32,6 +33,8 @@ export class TerminalStartMenuState extends TerminalState implements State {
     });
 
     public onEnter = async (): Promise<void> => (async () => {
+        TerminalStateService.saveState({ key: 'start-menu' });
+
         this.terminal.terminalWindow.classList.add('show-input-helpers');
         this.terminal.historyElement.classList.add('show-title');
 

@@ -1,7 +1,8 @@
 import { Disposable } from 'lib/event-emitter';
 import { State } from 'lib/state';
 
-import { TerminalState } from 'app/text-game/terminal/terminal.state';
+import { TerminalState } from 'app/text-game/terminal/terminal-state';
+import { TerminalStateService } from 'app/text-game/terminal/terminal-state.service';
 
 export class TerminalNewGameState extends TerminalState implements State {
     private inputHandler: Disposable = this.terminal.onInput.on(async (input: string) => {
@@ -9,6 +10,8 @@ export class TerminalNewGameState extends TerminalState implements State {
     });
 
     public onEnter = async (): Promise<void> => (async () => {
+        TerminalStateService.saveState({ key: 'new-game' });
+
         this.terminal.addLine(`
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae tellus elementum purus aliquam cursus. Donec nunc
             nisl, cursus id mauris eu, dictum vulputate magna. Nulla dictum velit sed ornare hendrerit. Donec aliquet cursus consectetur.
