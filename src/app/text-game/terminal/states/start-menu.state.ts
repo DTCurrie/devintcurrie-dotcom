@@ -10,7 +10,9 @@ import { TerminalStateService } from 'app/text-game/terminal/terminal-state.serv
 import { TerminalNewGameState } from 'app/text-game/terminal/states/new-game.state';
 
 export class TerminalStartMenuState extends TerminalState implements State {
-    private animationTicker: number = window.setTimeout(async () => this.mangle(), 500);
+    private animationTicker: number;
+
+    private animationFrames: Array<string> = [];
 
     private inputHandler: Disposable = this.terminal.onInput.on(async (input: string) => {
         this.terminal.handleInput(input, [], true);
@@ -29,23 +31,17 @@ export class TerminalStartMenuState extends TerminalState implements State {
         this.terminal.addLine('Command not recognized.', false, [ 'prompt' ], true);
     });
 
-    private async mangle(): Promise<void> {
+    private async animation(): Promise<number> {
         const art = this.terminal.historyContent.querySelector('.art pre');
-        const artText = art.textContent;
-        const replaceAll = async (original: string, replacement: string) => artText.split(original).join(replacement);
 
-        art.innerHTML = await replaceAll('/', "'");
-        await wait(500);
-        art.innerHTML = await replaceAll('+', '_');
-        await wait(500);
-        art.innerHTML = await replaceAll('"', '|');
-        await wait(500);
-        art.innerHTML = await replaceAll('`', ' ');
-        await wait(500);
-        art.innerHTML = await replaceAll('*', '.');
+        await (async () => {
+            for await (const frame of this.animationFrames) {
+                art.innerHTML = await frame;
+                await wait(500);
+            }
+        })();
 
-        art.innerHTML = artText;
-        window.setTimeout(async () => this.mangle(), 500);
+        return window.setTimeout(async () => this.animation());
     }
 
     public onEnter = async (): Promise<void> => (async () => {
@@ -79,7 +75,20 @@ export class TerminalStartMenuState extends TerminalState implements State {
             });
         });
 
-        await wait(100);
+        const art = this.terminal.historyContent.querySelector('.art pre');
+        let artText = art.textContent;
+
+        const replaceAll = async (original: string, replacement: string) => artText = artText.split(original).join(replacement);
+
+        this.animationFrames.push(artText);
+        await this.animationFrames.push(await replaceAll('/', "'"));
+        await this.animationFrames.push(await replaceAll('+', '_').then(async () => replaceAll('M', 'N')));
+        await this.animationFrames.push(await replaceAll('`', ' '));
+        await this.animationFrames.push(await replaceAll('_', '+').then(async () => replaceAll('N', 'M')));
+        await this.animationFrames.push(await replaceAll("'", '/'));
+
+        this.animationTicker = await this.animation();
+
         this.terminal.inputElement.disabled = false;
         this.terminal.inputElement.focus();
     })();
