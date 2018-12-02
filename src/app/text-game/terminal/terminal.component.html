@@ -1,6 +1,6 @@
 <div class="text-game-terminal">
     <tg-loader></tg-loader>
-    <div class="terminal-window">
+    <div class="terminal-window no-color">
         <div class="history">
             <div class="line title">
                 Spooky Mansion Mystery
@@ -9,13 +9,14 @@
             <div class="inner"></div>
 
         </div>
-        <form class="input">
+        <form class="input hide">
             <div class="helpers"></div>
             <div class="field">
                 <div class="prefix">$></div>
-                <input type="text">
+                <input type="text" placeholder="enter command">
             </div>
         </form>
     </div>
-    <a href="#" class="button skip-link"><span class="blink">*</span>skip to website</a>
+    <tg-audio-player class="hide"></tg-audio-player>
+    <button class="button skip-link"><span class="blink">*</span>skip to website</button>
 </div>

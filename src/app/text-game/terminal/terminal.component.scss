@@ -18,6 +18,14 @@
     border: 1px solid $font-color;
     border-radius: 24px;
 
+    &.no-color {
+      .prompt,
+      .sass,
+      .helper {
+        color: $font-color !important;
+      }
+    }
+
     &.show-input-helpers {
       .history {
         padding-bottom: 64px;
@@ -203,16 +211,25 @@
   }
 
   .button {
+    border: 0;
     padding: 2px 4px;
     font-size: 18px;
     font-family: $font-family-monospace;
     color: $font-color;
     background-color: darken($link-color, 7.5);
-  }
+    white-space: nowrap;
 
-  a.button:hover {
-    color: darken($font-color, 7.5);
-    background-color: darken($link-color, 15);
+    &:hover {
+      cursor: pointer;
+      color: darken($font-color, 7.5);
+      background-color: darken($link-color, 15);
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      outline: none;
+    }
   }
 
   .skip-link {

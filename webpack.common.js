@@ -47,8 +47,18 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(woff|woff2|eot|ttf|otf)$/,
-                use: 'file-loader'
+                test: /\.mp3$/,
+                loader: 'file-loader',
+                options: {
+                    name(file) {
+                        if (process.env.NODE_ENV === 'development') {
+                            return 'assets/[name].[ext]'
+                        }
+
+                        return 'assets/[hash].[ext]'
+                    },
+                    useRelativePath: process.env.NODE_ENV === "production"
+                }
             },
             {
                 test: /\.html$/,

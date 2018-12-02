@@ -16,11 +16,10 @@ import { TerminalIntroState, TerminalNewGameState, TerminalStartMenuState } from
 export class Terminal extends Component implements Init {
     private simplebar: any;
 
-    private inputForm: HTMLFormElement;
-
     public terminalWindow: HTMLElement;
     public historyElement: HTMLElement;
     public helpersElement: HTMLElement;
+    public inputForm: HTMLFormElement;
     public inputElement: HTMLInputElement;
 
     public onInput: EventEmitter<string> = new EventEmitter<string>();
@@ -85,15 +84,18 @@ export class Terminal extends Component implements Init {
 
     public async onInit(): Promise<void> {
         this.terminalWindow = this.querySelector<HTMLElement>('.terminal-window');
+
         this.historyElement = this.terminalWindow.querySelector<HTMLElement>('.history');
         this.inputForm = this.terminalWindow.querySelector<HTMLFormElement>('.input');
+
         this.helpersElement = this.inputForm.querySelector<HTMLFormElement>('.helpers');
         this.inputElement = this.inputForm.querySelector<HTMLInputElement>('input');
 
-        this.updateDivider();
-
         this.simplebar = new SimpleBar(this.historyElement.querySelector('.inner'));
+
         this.inputElement.disabled = true;
+
+        this.updateDivider();
 
         this.inputForm.addEventListener('submit', (ev: Event) => {
             ev.preventDefault();
