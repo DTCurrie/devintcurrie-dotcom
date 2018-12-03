@@ -19,6 +19,10 @@ declare interface Init extends Component {
     onInit(): void;
 }
 
+declare interface AfterInit extends Component {
+    onAfterInit(): void;
+}
+
 declare interface Destroy extends Component {
     onDestroy(): void;
 }
