@@ -2,10 +2,8 @@ import { wait } from 'lib/async';
 import { Disposable } from 'lib/event-emitter';
 import { State } from 'lib/state';
 
-import { TerminalStartMenuState } from 'app/text-game/terminal/states/start-menu.state';
-
-import { TerminalState } from 'app/text-game/terminal/terminal-state';
-import { TerminalStateService } from 'app/text-game/terminal/terminal-state.service';
+import { TerminalState } from 'app/shared/terminal/terminal-state';
+import { TerminalStartMenuState } from 'app/text-game/terminal-states';
 
 export class TerminalIntroState extends TerminalState implements State {
     private inputHandler: Disposable = this.terminal.onInput.on(async (input: string) => {
@@ -43,9 +41,8 @@ export class TerminalIntroState extends TerminalState implements State {
                 return;
             }
 
-            if (command === 'spooky_mansion_mystery.exe') {
-                // await this.terminal.stateMachine.transition(new TerminalStartMenuState(this.terminal));
-                await this.terminal.addLine('run spooky_mansion_mystery.exe', false, [ 'prompt' ]);
+            if (command === 'mansion_mystery.exe') {
+                await this.terminal.stateMachine.transition(new TerminalStartMenuState(this.terminal));
                 return;
             }
 
@@ -57,6 +54,7 @@ export class TerminalIntroState extends TerminalState implements State {
     });
 
     public onEnter = async (): Promise<void> => (async () => {
+        this.terminal.terminalWindow.classList.add('no-color');
         this.terminal.addLine('Welcome to devintcurrie.com!', false);
 
         this.terminal.addLine('--**[[ Site Booter ]]**--', false, [ 'title' ]);
@@ -84,7 +82,7 @@ export class TerminalIntroState extends TerminalState implements State {
         this.terminal.addLine('Input initialized.', false);
 
         this.terminal.addLine('Contents of "~/home/site/super-secret-folder":', false, [ 'system' ]);
-        this.terminal.addLine('<ul><li>site.exe</li><li>spooky_mansion_mystery.exe</li></ul>', false, [ 'system' ]);
+        this.terminal.addLine('<ul><li>site.exe</li><li>mansion_mystery.exe</li></ul>', false, [ 'system' ]);
 
         this.terminal.setHelpers([
             { command: 'run', options: [ 'exe' ] },

@@ -41,7 +41,10 @@ export function component<T>(config: ComponentConfig): (constructor: ComponentCo
         constructor.prototype.connectedCallback = function(): void {
             this.appendChild(clone);
             connectedCallback.call(this);
-            if ((this as Init).onInit) { (this as Init).onInit(); }
+            (async () => {
+                if ((this as Init).onInit) { await (this as Init).onInit(); }
+                if ((this as AfterInit).onAfterInit) { await (this as AfterInit).onAfterInit(); }
+            })();
         };
 
         constructor.prototype.disconnectedCallback = function(): void {

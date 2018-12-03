@@ -1,8 +1,8 @@
 import { Disposable } from 'lib/event-emitter';
 import { State } from 'lib/state';
 
-import { TerminalState } from 'app/text-game/terminal/terminal-state';
-import { TerminalStateService } from 'app/text-game/terminal/terminal-state.service';
+import { TerminalState } from 'app/shared/terminal/terminal-state';
+import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
 
 export class TerminalNewGameState extends TerminalState implements State {
     private inputHandler: Disposable = this.terminal.onInput.on(async (input: string) => {

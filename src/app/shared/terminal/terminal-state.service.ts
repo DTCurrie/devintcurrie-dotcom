@@ -1,5 +1,6 @@
 import { stringify } from 'lib/json';
-import { TerminalState } from 'app/text-game/terminal/terminal-state';
+
+import { TerminalState } from 'app/shared/terminal/terminal-state';
 
 interface TerminalStateData {
     key: string;

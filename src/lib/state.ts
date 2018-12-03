@@ -4,7 +4,7 @@ export interface State {
 }
 
 export class StateMachine {
-    private currentState: State;
+    constructor(private currentState?: State) { }
 
     public async transition(to: State): Promise<void> {
         return (async () => {

@@ -4,13 +4,13 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const webpack = require('webpack');
 
 module.exports = {
     entry: {
         polyfills: './src/polyfills.ts',
-        vendor: './src/vendor.ts',
         styles: './src/styles/styles.ts',
         main: './src/main.ts',
     },
@@ -34,7 +34,8 @@ module.exports = {
             filename: "[name].[contenthash].css",
             chunkFilename: "[id].css"
         }),
-        new webpack.HashedModuleIdsPlugin()
+        new webpack.HashedModuleIdsPlugin(),
+        new CopyWebpackPlugin([ { from: 'src/assets', to: 'assets' } ])
     ],
     module: {
         rules: [

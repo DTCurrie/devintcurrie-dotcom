@@ -1,7 +1,7 @@
 import { Component, component } from 'lib/component';
 
 @component({
-    selector: 'tg-audio-player',
+    selector: 'app-audio-player',
     template: `
         <div class="audio-player">
             <button  class="play-button">play</button>
@@ -16,7 +16,7 @@ import { Component, component } from 'lib/component';
                 <pre>Your browser does not support the audio element.</pre>
             </audio>
         </div>`,
-    stylesUrl: 'text-game/audio-player/audio-player.component.scss'
+    stylesUrl: 'shared/audio-player/audio-player.component.scss'
 })
 export class AudioPlayer extends Component implements Init {
 
@@ -65,6 +65,6 @@ export class AudioPlayer extends Component implements Init {
             this.volumeElement.value += 0.1;
         });
 
-        this.soundtrack = await import('assets/8bit_Dungeon_Level.mp3');
+        this.soundtrack = 'assets/8bit_Dungeon_Level.mp3';
     }
 }

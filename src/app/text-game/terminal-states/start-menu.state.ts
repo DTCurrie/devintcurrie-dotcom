@@ -3,11 +3,11 @@ import { componentFactory } from 'lib/component';
 import { Disposable } from 'lib/event-emitter';
 import { State } from 'lib/state';
 
-import { StartMenuArt } from 'app/text-game/art/start-menu/start-menu-art.component';
+import { TerminalState } from 'app/shared/terminal/terminal-state';
+import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
 
-import { TerminalState } from 'app/text-game/terminal/terminal-state';
-import { TerminalStateService } from 'app/text-game/terminal/terminal-state.service';
-import { TerminalNewGameState } from 'app/text-game/terminal/states/new-game.state';
+import { StartMenuArt } from 'app/text-game/art/start-menu/start-menu-art.component';
+import { TerminalNewGameState } from 'app/text-game/terminal-states/new-game.state';
 
 export class TerminalStartMenuState extends TerminalState implements State {
     private animationTicker: number;
@@ -47,8 +47,6 @@ export class TerminalStartMenuState extends TerminalState implements State {
 
         this.terminal.terminalWindow.classList.add('show-input-helpers');
         this.terminal.historyElement.classList.add('show-title');
-
-        await import('app/text-game/art/start-menu/start-menu-art.component');
 
         await this.terminal.addLine((await componentFactory<StartMenuArt>('tg-start-menu-art')).outerHTML, false);
         await this.terminal.addLine(

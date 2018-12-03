@@ -5,8 +5,10 @@ import { Component, component } from 'lib/component';
 import { EventEmitter } from 'lib/event-emitter';
 import { StateMachine } from 'lib/state';
 
-import { TerminalStateService } from 'app/text-game/terminal/terminal-state.service';
-import { TerminalIntroState, TerminalNewGameState, TerminalStartMenuState } from 'app/text-game/terminal/states';
+import { TerminalIntroState } from 'app/shared/terminal/intro.state';
+import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
+
+import { TerminalStartMenuState } from 'app/text-game/terminal-states';
 
 export interface TerminalHelper {
     command: string;
@@ -15,9 +17,9 @@ export interface TerminalHelper {
 }
 
 @component({
-    selector: 'tg-terminal',
-    templateUrl: 'text-game/terminal/terminal.component.html',
-    stylesUrl: 'text-game/terminal/terminal.component.scss'
+    selector: 'app-terminal',
+    templateUrl: 'shared/terminal/terminal.component.html',
+    stylesUrl: 'shared/terminal/terminal.component.scss'
 })
 export class Terminal extends Component implements Init {
     private simplebar: any;
@@ -138,6 +140,8 @@ export class Terminal extends Component implements Init {
 
         const state = TerminalStateService.loadState();
         if (state) {
+
+            await import('app/text-game/text-game.module');
             if (state.key === 'start-menu') {
                 this.stateMachine.transition(new TerminalStartMenuState(this));
                 return;
