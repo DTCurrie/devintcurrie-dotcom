@@ -16,12 +16,15 @@
     width: 100%;
     height: 100%;
     border: 1px solid $font-color;
-    border-radius: 24px;
+    border-radius: 0;
 
     &.no-color {
       .prompt,
       .sass,
-      .helper {
+      .helper,
+      .art,
+      .title,
+      .system {
         color: $font-color !important;
       }
     }
@@ -89,7 +92,7 @@
       }
 
       .prompt {
-        color: $yellow;
+        color: $orange;
       }
 
       .sass {
@@ -97,22 +100,28 @@
       }
 
       .helper {
-        color: $blue;
+        color: $yellow;
       }
 
       .art {
         color: $green;
-        text-align: center;
       }
 
       .title {
+        color: $blue;
+      }
+
+      .system {
+        color: $purple;
+      }
+
+      .header {
         position: absolute;
         display: none;
         top: 24px;
         left: 0;
         width: 100%;
         font-size: 24px;
-        color: $link-color;
         text-align: center;
 
         .divider {
@@ -151,19 +160,18 @@
             margin: 0;
             border: 0;
             display: inline;
-            color: $blue;
+            color: $yellow;
 
             &:first-child {
-              padding-right: 4px;
+              padding-right: 8px;
             }
 
             &:last-child {
-              padding-left: 4px;
+              padding-left: 8px;
             }
 
-            &:not(:first-child),
-            &:not(:last-child) {
-              padding: 0 4px;
+            &:not(:first-child):not(:last-child) {
+              padding: 0 8px;
             }
 
             &:hover {
@@ -230,6 +238,10 @@
     &:active {
       outline: none;
     }
+  }
+
+  .terminal-player {
+    float: left;
   }
 
   .skip-link {

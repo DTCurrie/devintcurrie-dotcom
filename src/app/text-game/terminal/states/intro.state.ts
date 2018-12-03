@@ -11,45 +11,59 @@ export class TerminalIntroState extends TerminalState implements State {
     private inputHandler: Disposable = this.terminal.onInput.on(async (input: string) => {
         this.terminal.handleInput(input);
 
-        if (!input.match(/^(ye?[as]?h?)|unlock$/i)) {
-            this.terminal.addLine('Command not recognized. Attempt to unlock?', false, [ 'prompt' ]);
+        if (input.match(/^help|-h$/i)) {
+            await this.terminal.addLine('Site Booter:', false, [ 'system' ]);
+            this.terminal.addLine(`
+                <ul>
+                    <li>* run [exe] - Runs the supplied module. ex: run site.exe</li>
+                    <li>* skip (-s) - Skip straight to my portfolio site.</li>
+                    <li>* help (-h) - Show this menu.</li>
+                </ul>`,
+                false, [ 'system' ]);
             return;
         }
 
-        if (input.match(/^yesh$/i)) { this.terminal.addLine('Nice Connery impression ...', false, [ 'sass' ]); }
-        this.terminal.addLine('System scan shows the website was moved to locked directory "~/home/site/super-secret-folder".');
+        if (input.match(/^skip|-s$/i)) {
+            this.terminal.addLine('Skip to site!', false, [ 'system' ]);
+            return;
+        }
 
-        const unlockText = await this.terminal.addLine('Unlocking directory "~/home/site/super-secret-folder"', false, [ 'loading' ]);
-        await wait(2000).then(() => this.terminal.removeLine(unlockText));
+        if (input.match(/^run( \w+(\.exe)?)?$/i)) {
+            const parts = input.split(' ');
 
-        this.terminal.addLine('Unlocked directory "~/home/site/super-secret-folder".', false);
-        this.terminal.addLine('Executing "super-secret-adventure.exe"', false, [ 'loading' ]);
+            if (parts.length < 2) {
+                await this.terminal.addLine('Run requires an option. ex: run site.exe', false, [ 'prompt' ]);
+                return;
+            }
 
-        await wait(2000);
-        await this.terminal.stateMachine.transition(new TerminalStartMenuState(this.terminal));
+            const command = parts[ 1 ];
+
+            if (command === 'site.exe') {
+                await this.terminal.addLine('run site.exe', false, [ 'prompt' ]);
+                return;
+            }
+
+            if (command === 'spooky_mansion_mystery.exe') {
+                // await this.terminal.stateMachine.transition(new TerminalStartMenuState(this.terminal));
+                await this.terminal.addLine('run spooky_mansion_mystery.exe', false, [ 'prompt' ]);
+                return;
+            }
+
+            await this.terminal.addLine(`Cannot find module ${command}`, false, [ 'prompt' ]);
+            return;
+        }
+
+        await this.terminal.addLine('Command not recognized. Try entering "help" for more information.', false, [ 'prompt' ]);
     });
 
     public onEnter = async (): Promise<void> => (async () => {
         this.terminal.addLine('Welcome to devintcurrie.com!', false);
 
-        const initText = await this.terminal.addLine('Initializing Website', false, [ 'loading' ]);
-        await wait(2000).then(() => this.terminal.removeLine(initText));
-
-        this.terminal.addLine('Error initializing website!', false);
+        this.terminal.addLine('--**[[ Site Booter ]]**--', false, [ 'title' ]);
         this.terminal.addLine(
-            `(don't worry this is all pretend, everything is working fine. you can skip all this by clicking the
-            <span class="button">skip to website</span> button in the bottom-right corner of the screen)`,
+            `(don't worry this is all pretend. you can skip all this by clicking the <span class="button">skip to website</span> button in
+            the bottom-right corner of the screen)`,
             false, [ 'sass' ]);
-
-        const rebootText = await this.terminal.addLine('Rebooting site', false, [ 'loading' ]);
-        await wait(2000).then(() => this.terminal.removeLine(rebootText));
-        this.terminal.addLine('Site rebooted.', false);
-
-        const startText = await this.terminal.addLine('Starting site_booter.exe', false, [ 'loading' ]);
-        await wait(2000).then(() => this.terminal.removeLine(startText));
-        this.terminal.addSpace();
-
-        this.terminal.addLine('--**[[ Site Booter ]]**--', false, [ 'helper' ]);
 
         const colorText = await this.terminal.addLine('Loading colors', false, [ 'loading' ]);
         await wait(2000);
@@ -59,7 +73,8 @@ export class TerminalIntroState extends TerminalState implements State {
 
         const scanText = await this.terminal.addLine('Scanning system', false, [ 'loading' ]);
         await wait(2000).then(() => this.terminal.removeLine(scanText));
-        this.terminal.addLine('System scan shows the website was moved to locked directory "~/home/site/super-secret-folder".', false);
+        this.terminal.addLine('System scan shows the website was moved to "~/home/site/super-secret-folder".', false);
+        this.terminal.addLine('Navigated to "~/home/site/super-secret-folder".', false);
 
         const inputText = await this.terminal.addLine('Initializing input', false, [ 'loading' ]);
         await wait(2000);
@@ -68,16 +83,12 @@ export class TerminalIntroState extends TerminalState implements State {
         this.terminal.terminalWindow.classList.add('show-input-helpers');
         this.terminal.addLine('Input initialized.', false);
 
-        const unlockText = await this.terminal.addLine('Unlocking directory "~/home/site/super-secret-folder"', false, [ 'loading' ]);
-        await wait(2000).then(() => this.terminal.removeLine(unlockText));
-        this.terminal.addLine('Unlocked and navigated to directory "~/home/site/super-secret-folder".', false);
-
-        this.terminal.addLine('Contents of "~/home/site/super-secret-folder":', false, [ 'helper' ]);
-        this.terminal.addLine('<ul><li>site.exe</li><li>spooky_mansion_mystery.exe</li></ul>', false);
+        this.terminal.addLine('Contents of "~/home/site/super-secret-folder":', false, [ 'system' ]);
+        this.terminal.addLine('<ul><li>site.exe</li><li>spooky_mansion_mystery.exe</li></ul>', false, [ 'system' ]);
 
         this.terminal.setHelpers([
             { command: 'run', options: [ 'exe' ] },
-            { command: 'skip' },
+            { command: 'skip', alias: '-s' },
             { command: 'help', alias: '-h' }
         ]);
 
