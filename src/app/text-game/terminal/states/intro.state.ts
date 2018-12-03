@@ -81,13 +81,6 @@ export class TerminalIntroState extends TerminalState implements State {
             { command: 'help', alias: '-h' }
         ]);
 
-        this.terminal.helpersElement.querySelectorAll('.helpers-list .helper').forEach((element: HTMLLIElement): void => {
-            element.addEventListener('click', (_ev: MouseEvent) => {
-                this.terminal.inputElement.value = element.getAttribute('data-command');
-                this.terminal.inputElement.focus();
-            });
-        });
-
         this.terminal.inputElement.disabled = false;
         this.terminal.inputElement.focus();
     })();

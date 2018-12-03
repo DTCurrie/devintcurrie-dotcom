@@ -65,14 +65,6 @@ export class TerminalStartMenuState extends TerminalState implements State {
             { command: 'skip' }
         ]);
 
-        this.terminal.helpersElement.querySelectorAll('.helpers-list .helper').forEach((element: HTMLLIElement): void => {
-            element.addEventListener('click', (_ev: MouseEvent) => {
-                if (element.classList.contains('new')) { this.terminal.inputElement.value = 'new'; }
-                if (element.classList.contains('skip')) { this.terminal.inputElement.value = 'skip'; }
-                this.terminal.inputElement.focus();
-            });
-        });
-
         const art = this.terminal.historyContent.querySelector('.art pre');
         let artText = art.textContent;
 

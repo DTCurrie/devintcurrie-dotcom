@@ -101,7 +101,14 @@ export class Terminal extends Component implements Init {
             if (helper.options) { helper.options.forEach((option: string) => helperElement.innerHTML += ` [${option}]`); }
             if (helper.alias) { helperElement.innerHTML += ` (${helper.alias})`; }
 
+            helperElement.addEventListener('click', (ev: MouseEvent) => {
+                ev.preventDefault();
+                this.inputElement.value = helper.command;
+                this.inputElement.focus();
+            });
+
             this.helpersElement.appendChild(helperElement);
+
         }));
     }
 
