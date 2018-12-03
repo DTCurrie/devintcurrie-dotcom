@@ -41,9 +41,9 @@ export class TerminalIntroState extends TerminalState implements State {
             <span class="button">skip to website</span> button in the bottom-right corner of the screen)`,
             false, [ 'sass' ]);
 
-        const rebootText = await this.terminal.addLine('Rebooting web server', false, [ 'loading' ]);
+        const rebootText = await this.terminal.addLine('Rebooting site', false, [ 'loading' ]);
         await wait(2000).then(() => this.terminal.removeLine(rebootText));
-        this.terminal.addLine('Web server rebooted.', false);
+        this.terminal.addLine('Site rebooted.', false);
 
         const startText = await this.terminal.addLine('Starting site_booter.exe', false, [ 'loading' ]);
         await wait(2000).then(() => this.terminal.removeLine(startText));
@@ -61,20 +61,32 @@ export class TerminalIntroState extends TerminalState implements State {
         await wait(2000).then(() => this.terminal.removeLine(scanText));
         this.terminal.addLine('System scan shows the website was moved to locked directory "~/home/site/super-secret-folder".', false);
 
+        const inputText = await this.terminal.addLine('Initializing input', false, [ 'loading' ]);
+        await wait(2000);
+        this.terminal.removeLine(inputText);
+        this.terminal.inputForm.classList.remove('hide');
+        this.terminal.terminalWindow.classList.add('show-input-helpers');
+        this.terminal.addLine('Input initialized.', false);
+
         const unlockText = await this.terminal.addLine('Unlocking directory "~/home/site/super-secret-folder"', false, [ 'loading' ]);
         await wait(2000).then(() => this.terminal.removeLine(unlockText));
         this.terminal.addLine('Unlocked and navigated to directory "~/home/site/super-secret-folder".', false);
 
         this.terminal.addLine('Contents of "~/home/site/super-secret-folder":', false, [ 'helper' ]);
-        this.terminal.addLine('<ul><li>site.exe</li><li>spooky_mansion_mystery.exe</li></ul>', false, [ 'helper' ]);
+        this.terminal.addLine('<ul><li>site.exe</li><li>spooky_mansion_mystery.exe</li></ul>', false);
 
-        const inputText = await this.terminal.addLine('Initializing input', false, [ 'loading' ]);
-        await wait(2000);
-        this.terminal.removeLine(inputText);
-        this.terminal.inputForm.classList.remove('hide');
-        this.terminal.addLine('Input initialized.', false);
+        this.terminal.setHelpers([
+            { command: 'run', options: [ 'exe' ] },
+            { command: 'skip' },
+            { command: 'help', alias: '-h' }
+        ]);
 
-        this.terminal.addLine('Load audio (music will play, you will have play/pause and volume control)?', false, [ 'prompt' ]);
+        this.terminal.helpersElement.querySelectorAll('.helpers-list .helper').forEach((element: HTMLLIElement): void => {
+            element.addEventListener('click', (_ev: MouseEvent) => {
+                this.terminal.inputElement.value = element.getAttribute('data-command');
+                this.terminal.inputElement.focus();
+            });
+        });
 
         this.terminal.inputElement.disabled = false;
         this.terminal.inputElement.focus();

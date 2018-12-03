@@ -34,12 +34,10 @@ export class TerminalStartMenuState extends TerminalState implements State {
     private async animation(): Promise<number> {
         const art = this.terminal.historyContent.querySelector('.art pre');
 
-        await (async () => {
-            for await (const frame of this.animationFrames) {
-                art.innerHTML = await frame;
-                await wait(500);
-            }
-        })();
+        await Promise.all(this.animationFrames.map(async (frame: string) => {
+            art.innerHTML = await frame;
+            await wait(500);
+        }));
 
         return window.setTimeout(async () => this.animation());
     }
@@ -49,6 +47,8 @@ export class TerminalStartMenuState extends TerminalState implements State {
 
         this.terminal.terminalWindow.classList.add('show-input-helpers');
         this.terminal.historyElement.classList.add('show-title');
+
+        await import('app/text-game/art/start-menu/start-menu-art.component');
 
         await this.terminal.addLine((await componentFactory<StartMenuArt>('tg-start-menu-art')).outerHTML, false);
         await this.terminal.addLine(
@@ -60,16 +60,14 @@ export class TerminalStartMenuState extends TerminalState implements State {
 
         this.terminal.addSpace();
 
-        this.terminal.helpersElement.innerHTML = `
-            <ul class="helpers-list">
-                <li class="helper">new</li>
-                <li class="helper">skip</li>
-            </ul>`;
+        this.terminal.setHelpers([
+            { command: 'new' },
+            { command: 'skip' }
+        ]);
 
-        this.terminal.helpersElement.querySelectorAll('.helpers-list-item').forEach((element: HTMLLIElement): void => {
+        this.terminal.helpersElement.querySelectorAll('.helpers-list .helper').forEach((element: HTMLLIElement): void => {
             element.addEventListener('click', (_ev: MouseEvent) => {
                 if (element.classList.contains('new')) { this.terminal.inputElement.value = 'new'; }
-                if (element.classList.contains('load')) { this.terminal.inputElement.value = 'load'; }
                 if (element.classList.contains('skip')) { this.terminal.inputElement.value = 'skip'; }
                 this.terminal.inputElement.focus();
             });

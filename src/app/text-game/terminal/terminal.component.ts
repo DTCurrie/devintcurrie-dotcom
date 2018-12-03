@@ -8,6 +8,12 @@ import { StateMachine } from 'lib/state';
 import { TerminalStateService } from 'app/text-game/terminal/terminal-state.service';
 import { TerminalIntroState, TerminalNewGameState, TerminalStartMenuState } from 'app/text-game/terminal/states';
 
+export interface TerminalHelper {
+    command: string;
+    options?: Array<string>;
+    alias?: string;
+}
+
 @component({
     selector: 'tg-terminal',
     templateUrl: 'text-game/terminal/terminal.component.html',
@@ -44,7 +50,7 @@ export class Terminal extends Component implements Init {
         if (input) { text = `> ${text}`; }
         if (deleteLast) { this.historyContent.removeChild(this.historyContent.lastChild); }
 
-        const line: HTMLElement = document.createElement('p');
+        const line: HTMLElement = document.createElement('div');
 
         line.classList.add('line');
         if (classList) { line.classList.add(...classList); }
@@ -52,7 +58,7 @@ export class Terminal extends Component implements Init {
         line.innerHTML = text;
         this.historyContent.appendChild(line);
 
-        if (this.historyScroll.scrollHeight >= this.historyElement.scrollHeight) { this.historyElement.classList.add('filled'); }
+        if (this.historyElement.scrollHeight >= this.terminalWindow.scrollHeight) { this.historyElement.classList.add('filled'); }
         this.historyScroll.scrollTop = this.historyScroll.scrollHeight;
 
         return line;
@@ -82,13 +88,30 @@ export class Terminal extends Component implements Init {
         this.inputForm.classList.remove('hide');
     }
 
+    public async setHelpers(helpers: Array<TerminalHelper>): Promise<void> {
+        this.helpersElement.innerHTML = '';
+
+        await Promise.all(helpers.map(async (helper: TerminalHelper) => {
+            const helperElement = document.createElement('li');
+
+            helperElement.classList.add('helper');
+            helperElement.setAttribute('data-command', helper.command);
+            helperElement.innerHTML = helper.command;
+
+            if (helper.options) { helper.options.forEach((option: string) => helperElement.innerHTML += ` [${option}]`); }
+            if (helper.alias) { helperElement.innerHTML += ` (${helper.alias})`; }
+
+            this.helpersElement.appendChild(helperElement);
+        }));
+    }
+
     public async onInit(): Promise<void> {
         this.terminalWindow = this.querySelector<HTMLElement>('.terminal-window');
 
         this.historyElement = this.terminalWindow.querySelector<HTMLElement>('.history');
         this.inputForm = this.terminalWindow.querySelector<HTMLFormElement>('.input');
 
-        this.helpersElement = this.inputForm.querySelector<HTMLFormElement>('.helpers');
+        this.helpersElement = this.inputForm.querySelector<HTMLFormElement>('.helpers .helpers-list');
         this.inputElement = this.inputForm.querySelector<HTMLInputElement>('input');
 
         this.simplebar = new SimpleBar(this.historyElement.querySelector('.inner'));
