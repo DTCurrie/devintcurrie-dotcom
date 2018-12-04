@@ -3,6 +3,8 @@ import { Disposable } from 'lib/event-emitter';
 import { State } from 'lib/state';
 
 import { TerminalState } from 'app/shared/terminal/terminal-state';
+import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
+
 import { TextGameStartMenuState } from 'app/text-game/terminal-states';
 
 export class TerminalIntroState extends TerminalState implements State {
@@ -59,7 +61,11 @@ export class TerminalIntroState extends TerminalState implements State {
     });
 
     public onEnter = async (): Promise<void> => (async () => {
+        TerminalStateService.saveState({ module: 'app', key: 'intro' });
+
         this.terminal.terminalWindow.classList.add('no-color');
+        this.terminal.inputForm.classList.add('hide');
+
         this.terminal.addLine('Welcome to devintcurrie.com!', false);
 
         this.terminal.addLine('--**[[ Site Booter ]]**--', false, [ 'title' ]);

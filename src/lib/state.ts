@@ -6,14 +6,12 @@ export interface State {
 export class StateMachine {
     constructor(private currentState?: State) { }
 
-    public async transition(to: State): Promise<void> {
-        return (async () => {
-            if (this.currentState) { await this.currentState.onExit(to); }
+    public transition = async (to: State): Promise<void> => {
+        if (this.currentState) { await this.currentState.onExit(to); }
 
-            const from: State = this.currentState;
-            this.currentState = to;
+        const from: State = this.currentState;
+        this.currentState = to;
 
-            await this.currentState.onEnter(from);
-        })();
-    }
+        await this.currentState.onEnter(from);
+    };
 }

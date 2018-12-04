@@ -10,7 +10,7 @@ export class TextGameNewGameState extends TerminalState implements State {
     });
 
     public onEnter = async (): Promise<void> => (async () => {
-        TerminalStateService.saveState({ key: 'new-game' });
+        TerminalStateService.saveState({ module: 'text-game', key: 'new-game' });
 
         this.terminal.addLine(`
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae tellus elementum purus aliquam cursus. Donec nunc
