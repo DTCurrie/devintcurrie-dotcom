@@ -8,6 +8,7 @@ import { StateMachine } from 'lib/state';
 import { TerminalIntroState } from 'app/intro.state';
 
 import { TextGameNewGameState, TextGameStartMenuState } from 'app/text-game/terminal-states';
+import { SnakeStartMenuState } from 'app/snake/terminal-states/start-menu.state';
 
 export interface TerminalHelper {
     command: string;
@@ -39,12 +40,14 @@ export class Terminal extends Component implements Init {
 
     public stateMachine: StateMachine = new StateMachine();
 
+    public initialized: boolean = +localStorage.getItem('devintcurrie:terminal-intitialized') === 1;
+
     public get historyContent(): Element { return this.simplebar.getContentElement(); }
     public get historyScroll(): Element { return this.simplebar.getScrollElement(); }
 
     private async changeState(): Promise<void> {
-        const stateModule = this.getAttribute('data-state-module');
-        const stateKey = this.getAttribute('data-state-key');
+        const stateModule = this.dataset.stateModule;
+        const stateKey = this.dataset.stateKey;
 
         if (stateModule === 'text-game') {
             try {
@@ -60,6 +63,18 @@ export class Terminal extends Component implements Init {
                 }
             } catch (error) {
                 return console.error(`An error occurred while loading the text-game module. Returned ${error}`);
+            }
+        }
+
+        if (stateModule === 'snake') {
+            try {
+                await import(/* webpackChunkName: "snake" */ 'app/snake/snake.module');
+                if (stateKey === 'start-menu') {
+                    this.stateMachine.transition(new SnakeStartMenuState(this));
+                    return;
+                }
+            } catch (error) {
+                return console.error(`An error occurred while loading the snake module. Returned ${error}`);
             }
         }
 
@@ -164,7 +179,14 @@ export class Terminal extends Component implements Init {
             this.onInput.emit(this.inputElement.value);
         });
 
+        this.querySelector('.main-link').addEventListener('click', (ev: MouseEvent) => {
+            ev.preventDefault();
+            this.dataset.stateModule = 'app';
+            this.dataset.stateKey = 'intro';
+        });
+
         window.addEventListener('resize', (_ev: UIEvent) => this.updateDivider());
+
         this.changeState();
     }
 }

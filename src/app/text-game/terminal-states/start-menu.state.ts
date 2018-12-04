@@ -1,12 +1,10 @@
 import { wait } from 'lib/async';
-import { componentFactory } from 'lib/component';
 import { Disposable } from 'lib/event-emitter';
 import { State } from 'lib/state';
 
 import { TerminalState } from 'app/shared/terminal/terminal-state';
 import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
 
-import { StartMenuArt } from 'app/text-game/art/start-menu/start-menu-art.component';
 import { TextGameNewGameState } from 'app/text-game/terminal-states/new-game.state';
 
 export class TextGameStartMenuState extends TerminalState implements State {
@@ -42,7 +40,7 @@ export class TextGameStartMenuState extends TerminalState implements State {
         return window.setTimeout(async () => this.animation());
     }
 
-    public onEnter = async (): Promise<void> => (async () => {
+    public async onEnter(): Promise<void> {
         TerminalStateService.saveState({ module: 'text-game', key: 'start-menu' });
 
         if (!this.terminal.terminalWindow.classList.contains('show-input-helpers')) {
@@ -52,6 +50,8 @@ export class TextGameStartMenuState extends TerminalState implements State {
         if (!this.terminal.historyElement.classList.contains('show-title')) {
             this.terminal.historyElement.classList.add('show-title');
         }
+
+        this.terminal.terminalWindow.querySelector('.header-text').textContent = 'Spooky Mansion Mystery';
 
         await this.terminal.addLine('<tg-start-menu-art></tg-start-menu-art>', false);
         await this.terminal.addLine(
@@ -84,7 +84,7 @@ export class TextGameStartMenuState extends TerminalState implements State {
 
         this.terminal.inputElement.disabled = false;
         this.terminal.inputElement.focus();
-    })();
+    }
 
     public onExit(to: State): void {
         this.inputHandler.dispose();

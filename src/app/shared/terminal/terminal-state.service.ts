@@ -9,7 +9,7 @@ interface TerminalStateData {
 }
 
 export class TerminalStateService {
-    private static readonly storageKey = 'spooky-mansion-mystery:terminal-state';
+    private static readonly storageKey = 'devintcurrie:terminal-state';
 
     public static saveState(data: TerminalStateData): void { localStorage.setItem(TerminalStateService.storageKey, stringify(data)); }
     public static loadState(): TerminalStateData { return JSON.parse(localStorage.getItem(TerminalStateService.storageKey)); }

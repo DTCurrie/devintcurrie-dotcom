@@ -9,7 +9,7 @@ export class TextGameNewGameState extends TerminalState implements State {
         this.terminal.handleInput(input);
     });
 
-    public onEnter = async (): Promise<void> => (async () => {
+    public async onEnter(): Promise<void> {
         TerminalStateService.saveState({ module: 'text-game', key: 'new-game' });
 
         if (!this.terminal.terminalWindow.classList.contains('show-input-helpers')) {
@@ -41,7 +41,7 @@ export class TextGameNewGameState extends TerminalState implements State {
             false, [ 'prompt' ]);
 
         this.terminal.inputElement.focus();
-    })();
+    }
 
     public onExit(): void {
         this.terminal.clear();

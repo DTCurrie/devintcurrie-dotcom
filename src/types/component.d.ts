@@ -1,9 +1,15 @@
+declare interface ComponentAttribute {
+    key: string;
+    value: string;
+}
+
 declare interface ComponentConfig {
     selector: string;
     template?: string;
     templateUrl?: string;
     styles?: string;
     stylesUrl?: string;
+    attributes?: Array<ComponentAttribute>;
 }
 
 declare interface Component extends HTMLElement {
