@@ -45,8 +45,13 @@ export class TextGameStartMenuState extends TerminalState implements State {
     public onEnter = async (): Promise<void> => (async () => {
         TerminalStateService.saveState({ module: 'text-game', key: 'start-menu' });
 
-        this.terminal.terminalWindow.classList.add('show-input-helpers');
-        this.terminal.historyElement.classList.add('show-title');
+        if (!this.terminal.terminalWindow.classList.contains('show-input-helpers')) {
+            this.terminal.terminalWindow.classList.add('show-input-helpers');
+        }
+
+        if (!this.terminal.historyElement.classList.contains('show-title')) {
+            this.terminal.historyElement.classList.add('show-title');
+        }
 
         await this.terminal.addLine('<tg-start-menu-art></tg-start-menu-art>', false);
         await this.terminal.addLine(

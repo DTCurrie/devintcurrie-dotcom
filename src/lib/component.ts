@@ -39,6 +39,7 @@ export function component<T>(config: ComponentConfig): (constructor: ComponentCo
         // we need to use this outside of class body (since we are inside a constructor function), so disbale tslint
         // tslint:disable:no-invalid-this
         constructor.prototype.connectedCallback = function(): void {
+            this.innerHTML = '';
             this.appendChild(clone);
             connectedCallback.call(this);
             (async () => {

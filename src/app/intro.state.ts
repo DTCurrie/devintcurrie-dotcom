@@ -43,7 +43,7 @@ export class TerminalIntroState extends TerminalState implements State {
                 return;
             }
 
-            if (command === 'mansion_mystery.exe') {
+            if (command === 'mystery.exe') {
                 await this.terminal.stateMachine.transition(new TextGameStartMenuState(this.terminal));
                 return;
             }
@@ -96,7 +96,7 @@ export class TerminalIntroState extends TerminalState implements State {
         this.terminal.addLine(`
             <ul>
                 <li class="run-link">site.exe</li>
-                <li class="run-link">mansion_mystery.exe</li>
+                <li class="run-link">mystery.exe</li>
                 <li class="run-link">snake.exe</li>
             </ul>`,
             false, [ 'system' ]);

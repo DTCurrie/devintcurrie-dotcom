@@ -1,2 +1,1 @@
-import 'app/shared/shared.module';
-import 'app/app.module';
+window.addEventListener('load', async () => { await import(/* webpackChunkName: "app" */ 'app/app.module'); });

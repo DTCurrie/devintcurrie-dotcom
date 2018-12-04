@@ -12,6 +12,14 @@ export class TextGameNewGameState extends TerminalState implements State {
     public onEnter = async (): Promise<void> => (async () => {
         TerminalStateService.saveState({ module: 'text-game', key: 'new-game' });
 
+        if (!this.terminal.terminalWindow.classList.contains('show-input-helpers')) {
+            this.terminal.terminalWindow.classList.add('show-input-helpers');
+        }
+
+        if (!this.terminal.historyElement.classList.contains('show-title')) {
+            this.terminal.historyElement.classList.add('show-title');
+        }
+
         this.terminal.addLine(`
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae tellus elementum purus aliquam cursus. Donec nunc
             nisl, cursus id mauris eu, dictum vulputate magna. Nulla dictum velit sed ornare hendrerit. Donec aliquet cursus consectetur.

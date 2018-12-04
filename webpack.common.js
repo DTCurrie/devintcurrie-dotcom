@@ -30,6 +30,7 @@ const webpackConfig = {
         textGame: './src/app/text-game/text-game.module',
     },
     optimization: {
+        concatenateModules: true,
         usedExports: true,
         runtimeChunk: 'single',
         splitChunks: {
