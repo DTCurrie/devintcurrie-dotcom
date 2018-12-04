@@ -5,10 +5,9 @@ import { Component, component } from 'lib/component';
 import { EventEmitter } from 'lib/event-emitter';
 import { StateMachine } from 'lib/state';
 
-import { TerminalIntroState } from 'app/shared/terminal/intro.state';
-import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
+import { TerminalIntroState } from 'app/intro.state';
 
-import { TerminalStartMenuState } from 'app/text-game/terminal-states';
+import { TextGameStartMenuState } from 'app/text-game/terminal-states';
 
 export interface TerminalHelper {
     command: string;
@@ -22,7 +21,15 @@ export interface TerminalHelper {
     stylesUrl: 'shared/terminal/terminal.component.scss'
 })
 export class Terminal extends Component implements Init {
+
     private simplebar: any;
+    private onStateChanged: MutationObserver = new MutationObserver((mutations: Array<MutationRecord>, observer: MutationObserver) => {
+        mutations.forEach(async (mutation: MutationRecord) => {
+            if (mutation.type !== 'attributes') { return; }
+            if (!(mutation.attributeName === 'data-state-module' || mutation.attributeName === 'data-state-key')) { return; }
+            await this.changeState();
+        });
+    });
 
     public terminalWindow: HTMLElement;
     public historyElement: HTMLElement;
@@ -37,11 +44,35 @@ export class Terminal extends Component implements Init {
     public get historyContent(): Element { return this.simplebar.getContentElement(); }
     public get historyScroll(): Element { return this.simplebar.getScrollElement(); }
 
+    private async changeState(): Promise<void> {
+        const stateModule = this.getAttribute('data-state-module');
+        const stateKey = this.getAttribute('data-state-key');
+
+        if (stateModule === 'text-game') {
+            import(/* webpackChunkName: "textGame" */ 'app/text-game/text-game.module')
+                .then(() => {
+                    if (stateKey === 'start-menu') {
+                        this.stateMachine.transition(new TextGameStartMenuState(this));
+                        return;
+                    }
+
+                    if (stateKey === 'new-game') {
+                        // terminal.stateMachine.transition(new TextGameNewGameState(this));
+                        this.stateMachine.transition(new TextGameStartMenuState(this));
+                        return;
+                    }
+                })
+                .catch((error: any) => `An error occurred while loading the text-game module. Returned ${error}`);
+            return;
+        }
+
+        this.stateMachine.transition(new TerminalIntroState(this));
+    }
+
     private updateDivider(): void {
         const divider = this.historyElement.querySelector('.divider');
         const character = divider.getAttribute('data-character');
         const count = Math.floor(this.historyElement.clientWidth / 10);
-
         let content = '';
 
         for (let i = 0; i < count; i++) { content += character; }
@@ -115,6 +146,8 @@ export class Terminal extends Component implements Init {
     }
 
     public async onInit(): Promise<void> {
+        this.onStateChanged.observe(this, { attributes: true });
+
         this.terminalWindow = this.querySelector<HTMLElement>('.terminal-window');
 
         this.historyElement = this.terminalWindow.querySelector<HTMLElement>('.history');
@@ -135,25 +168,6 @@ export class Terminal extends Component implements Init {
         });
 
         window.addEventListener('resize', (_ev: UIEvent) => this.updateDivider());
-
-        await wait(2000);
-
-        const state = TerminalStateService.loadState();
-        if (state) {
-
-            await import('app/text-game/text-game.module');
-            if (state.key === 'start-menu') {
-                this.stateMachine.transition(new TerminalStartMenuState(this));
-                return;
-            }
-
-            if (state.key === 'new-game') {
-                // this.stateMachine.transition(new TerminalNewGameState(this));
-                this.stateMachine.transition(new TerminalStartMenuState(this));
-                return;
-            }
-        }
-
-        this.stateMachine.transition(new TerminalIntroState(this));
+        this.changeState();
     }
 }

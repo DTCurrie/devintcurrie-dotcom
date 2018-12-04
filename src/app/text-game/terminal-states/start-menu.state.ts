@@ -7,9 +7,9 @@ import { TerminalState } from 'app/shared/terminal/terminal-state';
 import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
 
 import { StartMenuArt } from 'app/text-game/art/start-menu/start-menu-art.component';
-import { TerminalNewGameState } from 'app/text-game/terminal-states/new-game.state';
+import { TextGameNewGameState } from 'app/text-game/terminal-states/new-game.state';
 
-export class TerminalStartMenuState extends TerminalState implements State {
+export class TextGameStartMenuState extends TerminalState implements State {
     private animationTicker: number;
 
     private animationFrames: Array<string> = [];
@@ -19,7 +19,7 @@ export class TerminalStartMenuState extends TerminalState implements State {
 
         if (input.match(/^new$/i)) {
             this.terminal.addLine('Starting new game!', false, [ 'prompt' ]);
-            await this.terminal.stateMachine.transition(new TerminalNewGameState(this.terminal));
+            await this.terminal.stateMachine.transition(new TextGameNewGameState(this.terminal));
             return;
         }
 
@@ -43,12 +43,12 @@ export class TerminalStartMenuState extends TerminalState implements State {
     }
 
     public onEnter = async (): Promise<void> => (async () => {
-        TerminalStateService.saveState({ key: 'start-menu' });
+        TerminalStateService.saveState({ module: 'text-game', key: 'start-menu' });
 
         this.terminal.terminalWindow.classList.add('show-input-helpers');
         this.terminal.historyElement.classList.add('show-title');
 
-        await this.terminal.addLine((await componentFactory<StartMenuArt>('tg-start-menu-art')).outerHTML, false);
+        await this.terminal.addLine('<tg-start-menu-art></tg-start-menu-art>', false);
         await this.terminal.addLine(
             `Welcome to Spooky Mansion Mystery, a text-based adventure game where you will explore a haunted mansion, find clues, solve
             puzzles, and finally escape! Don't worry, if you want to skip this and go right to my website, use the

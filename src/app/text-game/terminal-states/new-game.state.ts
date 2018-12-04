@@ -4,13 +4,13 @@ import { State } from 'lib/state';
 import { TerminalState } from 'app/shared/terminal/terminal-state';
 import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
 
-export class TerminalNewGameState extends TerminalState implements State {
+export class TextGameNewGameState extends TerminalState implements State {
     private inputHandler: Disposable = this.terminal.onInput.on(async (input: string) => {
         this.terminal.handleInput(input);
     });
 
     public onEnter = async (): Promise<void> => (async () => {
-        TerminalStateService.saveState({ key: 'new-game' });
+        TerminalStateService.saveState({ module: 'text-game', key: 'new-game' });
 
         this.terminal.addLine(`
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae tellus elementum purus aliquam cursus. Donec nunc

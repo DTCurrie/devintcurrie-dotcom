@@ -3,7 +3,9 @@ import { Disposable } from 'lib/event-emitter';
 import { State } from 'lib/state';
 
 import { TerminalState } from 'app/shared/terminal/terminal-state';
-import { TerminalStartMenuState } from 'app/text-game/terminal-states';
+import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
+
+import { TextGameStartMenuState } from 'app/text-game/terminal-states';
 
 export class TerminalIntroState extends TerminalState implements State {
     private inputHandler: Disposable = this.terminal.onInput.on(async (input: string) => {
@@ -42,7 +44,12 @@ export class TerminalIntroState extends TerminalState implements State {
             }
 
             if (command === 'mansion_mystery.exe') {
-                await this.terminal.stateMachine.transition(new TerminalStartMenuState(this.terminal));
+                await this.terminal.stateMachine.transition(new TextGameStartMenuState(this.terminal));
+                return;
+            }
+
+            if (command === 'snake.exe') {
+                await this.terminal.stateMachine.transition(new TextGameStartMenuState(this.terminal));
                 return;
             }
 
@@ -54,7 +61,11 @@ export class TerminalIntroState extends TerminalState implements State {
     });
 
     public onEnter = async (): Promise<void> => (async () => {
+        TerminalStateService.saveState({ module: 'app', key: 'intro' });
+
         this.terminal.terminalWindow.classList.add('no-color');
+        this.terminal.inputForm.classList.add('hide');
+
         this.terminal.addLine('Welcome to devintcurrie.com!', false);
 
         this.terminal.addLine('--**[[ Site Booter ]]**--', false, [ 'title' ]);
@@ -82,7 +93,21 @@ export class TerminalIntroState extends TerminalState implements State {
         this.terminal.addLine('Input initialized.', false);
 
         this.terminal.addLine('Contents of "~/home/site/super-secret-folder":', false, [ 'system' ]);
-        this.terminal.addLine('<ul><li>site.exe</li><li>mansion_mystery.exe</li></ul>', false, [ 'system' ]);
+        this.terminal.addLine(`
+            <ul>
+                <li class="run-link">site.exe</li>
+                <li class="run-link">mansion_mystery.exe</li>
+                <li class="run-link">snake.exe</li>
+            </ul>`,
+            false, [ 'system' ]);
+
+        this.terminal.historyContent.querySelectorAll<HTMLLIElement>('.run-link').forEach((link: HTMLLIElement) => {
+            link.addEventListener('click', (ev: MouseEvent) => {
+                ev.preventDefault();
+                this.terminal.inputElement.value = `run ${link.textContent}`;
+                this.terminal.inputElement.focus();
+            });
+        });
 
         this.terminal.setHelpers([
             { command: 'run', options: [ 'exe' ] },

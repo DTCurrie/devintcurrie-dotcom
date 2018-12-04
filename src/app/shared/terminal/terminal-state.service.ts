@@ -3,6 +3,7 @@ import { stringify } from 'lib/json';
 import { TerminalState } from 'app/shared/terminal/terminal-state';
 
 interface TerminalStateData {
+    module: string;
     key: string;
     data?: TerminalState;
 }
