@@ -82,7 +82,20 @@ export class TerminalIntroState extends TerminalState implements State {
         this.terminal.addLine('Input initialized.', false);
 
         this.terminal.addLine('Contents of "~/home/site/super-secret-folder":', false, [ 'system' ]);
-        this.terminal.addLine('<ul><li>site.exe</li><li>mansion_mystery.exe</li></ul>', false, [ 'system' ]);
+        this.terminal.addLine(`
+            <ul>
+                <li class="run-link">site.exe</li>
+                <li class="run-link">mansion_mystery.exe</li>
+            </ul>`,
+            false, [ 'system' ]);
+
+        this.terminal.historyContent.querySelectorAll<HTMLLIElement>('.run-link').forEach((link: HTMLLIElement) => {
+            link.addEventListener('click', (ev: MouseEvent) => {
+                ev.preventDefault();
+                this.terminal.inputElement.value = `run ${link.textContent}`;
+                this.terminal.inputElement.focus();
+            });
+        });
 
         this.terminal.setHelpers([
             { command: 'run', options: [ 'exe' ] },

@@ -41,7 +41,6 @@ export class Terminal extends Component implements Init {
         const divider = this.historyElement.querySelector('.divider');
         const character = divider.getAttribute('data-character');
         const count = Math.floor(this.historyElement.clientWidth / 10);
-
         let content = '';
 
         for (let i = 0; i < count; i++) { content += character; }
@@ -139,9 +138,8 @@ export class Terminal extends Component implements Init {
         await wait(2000);
 
         const state = TerminalStateService.loadState();
-        if (state) {
 
-            await import('app/text-game/text-game.module');
+        if (state) {
             if (state.key === 'start-menu') {
                 this.stateMachine.transition(new TerminalStartMenuState(this));
                 return;
