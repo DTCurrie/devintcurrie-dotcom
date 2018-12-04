@@ -8,7 +8,7 @@ import { StateMachine } from 'lib/state';
 import { TerminalIntroState } from 'app/shared/terminal/intro.state';
 import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
 
-import { TerminalStartMenuState } from 'app/text-game/terminal-states';
+import { TextGameStartMenuState } from 'app/text-game/terminal-states';
 
 export interface TerminalHelper {
     command: string;
@@ -141,13 +141,13 @@ export class Terminal extends Component implements Init {
 
         if (state) {
             if (state.key === 'start-menu') {
-                this.stateMachine.transition(new TerminalStartMenuState(this));
+                this.stateMachine.transition(new TextGameStartMenuState(this));
                 return;
             }
 
             if (state.key === 'new-game') {
                 // this.stateMachine.transition(new TerminalNewGameState(this));
-                this.stateMachine.transition(new TerminalStartMenuState(this));
+                this.stateMachine.transition(new TextGameStartMenuState(this));
                 return;
             }
         }

@@ -3,7 +3,7 @@ import { Disposable } from 'lib/event-emitter';
 import { State } from 'lib/state';
 
 import { TerminalState } from 'app/shared/terminal/terminal-state';
-import { TerminalStartMenuState } from 'app/text-game/terminal-states';
+import { TextGameStartMenuState } from 'app/text-game/terminal-states';
 
 export class TerminalIntroState extends TerminalState implements State {
     private inputHandler: Disposable = this.terminal.onInput.on(async (input: string) => {
@@ -42,7 +42,12 @@ export class TerminalIntroState extends TerminalState implements State {
             }
 
             if (command === 'mansion_mystery.exe') {
-                await this.terminal.stateMachine.transition(new TerminalStartMenuState(this.terminal));
+                await this.terminal.stateMachine.transition(new TextGameStartMenuState(this.terminal));
+                return;
+            }
+
+            if (command === 'snake.exe') {
+                await this.terminal.stateMachine.transition(new TextGameStartMenuState(this.terminal));
                 return;
             }
 
@@ -86,6 +91,7 @@ export class TerminalIntroState extends TerminalState implements State {
             <ul>
                 <li class="run-link">site.exe</li>
                 <li class="run-link">mansion_mystery.exe</li>
+                <li class="run-link">snake.exe</li>
             </ul>`,
             false, [ 'system' ]);
 
