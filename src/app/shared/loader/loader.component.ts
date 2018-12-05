@@ -1,4 +1,3 @@
-import { wait } from 'lib/async';
 import { Component, component } from 'lib/component';
 
 @component({

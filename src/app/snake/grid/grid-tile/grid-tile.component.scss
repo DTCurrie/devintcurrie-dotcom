@@ -1,0 +1,40 @@
+@import "../../../../styles/variables";
+
+.grid-tile {
+  display: block;
+  float: left;
+
+  &,
+  & &-content {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    border: 0;
+    padding: 0;
+  }
+
+  & &-content {
+    display: inline-block;
+    top: -1px;
+    line-height: 18px;
+    text-align: center;
+    vertical-align: middle;
+
+    &.player {
+      color: $green;
+    }
+
+    &.segment {
+      color: $blue;
+    }
+
+    &.food {
+      color: $orange;
+    }
+
+    &.dead {
+      color: $pink;
+    }
+  }
+}
