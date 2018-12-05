@@ -1,4 +1,4 @@
-import { Disposable } from 'lib/event-emitter';
+import { Disposable } from 'lib/emitters';
 import { State } from 'lib/state';
 
 import { TerminalState } from 'app/shared/terminal/terminal-state';

@@ -2,7 +2,7 @@ import SimpleBar from 'simplebar';
 
 import { wait } from 'lib/async';
 import { Component, component } from 'lib/component';
-import { EventEmitter } from 'lib/event-emitter';
+import { TypedEventEmitter } from 'lib/emitters';
 import { StateMachine } from 'lib/state';
 
 import { TerminalIntroState } from 'app/intro.state';
@@ -36,7 +36,7 @@ export class Terminal extends Component implements Init {
     public inputForm: HTMLFormElement;
     public inputElement: HTMLInputElement;
 
-    public onInput: EventEmitter<string> = new EventEmitter<string>();
+    public onInput: TypedEventEmitter<string> = new TypedEventEmitter<string>();
 
     public stateMachine: StateMachine = new StateMachine();
 
