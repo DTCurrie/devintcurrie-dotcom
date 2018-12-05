@@ -9,28 +9,10 @@
     display: block;
     margin: 0 auto;
     border: 1px solid white;
-
-    .grid-tile {
-      position: relative;
-      display: block;
-      width: 18px;
-      height: 18px;
-      line-height: 18px;
-      text-align: center;
-      float: left;
-
-      .content {
-        position: relative;
-        display: inline-block;
-        width: 18px;
-        height: 18px;
-        line-height: 18px;
-        vertical-align: middle;
-      }
-    }
   }
 
-  .score-container {
+  .score-container,
+  .instructions {
     position: relative;
     display: block;
     text-align: center;

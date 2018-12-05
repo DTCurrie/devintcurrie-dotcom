@@ -59,5 +59,6 @@ export class SnakeStartMenuState extends TerminalState implements State {
     public onExit(to: State): void {
         this.terminal.clear();
         this.terminal.helpersElement.innerHTML = '';
+        this.terminal.historyElement.classList.remove('lock');
     }
 }
