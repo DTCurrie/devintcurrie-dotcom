@@ -1,0 +1,40 @@
+@import "../../../styles/variables";
+
+.grid {
+  display: block;
+  width: 100%;
+
+  & &-tiles {
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    border: 1px solid white;
+
+    .grid-tile {
+      position: relative;
+      display: block;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
+      text-align: center;
+      float: left;
+
+      .content {
+        position: relative;
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .score-container {
+    position: relative;
+    display: block;
+    text-align: center;
+    font-family: $font-family-monospace;
+    font-size: 18px;
+  }
+}

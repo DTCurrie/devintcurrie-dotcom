@@ -3,9 +3,13 @@ export function validateComponent(config: ComponentConfig): void {
     if (!config.template && !config.templateUrl) { throw new Error('Components require a template'); }
 }
 
-export class Component extends HTMLElement implements Component { }
+export class Component extends HTMLElement implements Component {
+    constructor() {
+        super();
+    }
+}
 
-export function component<T>(config: ComponentConfig): (constructor: ComponentConstructor<T>) => void {
+export function component<T extends HTMLElement>(config: ComponentConfig): (constructor: ComponentConstructor<T>) => void {
     return async (constructor: ComponentConstructor<T>) => {
         validateComponent(config);
 
@@ -39,12 +43,19 @@ export function component<T>(config: ComponentConfig): (constructor: ComponentCo
         // we need to use this outside of class body (since we are inside a constructor function), so disbale tslint
         // tslint:disable:no-invalid-this
         constructor.prototype.connectedCallback = function(): void {
+            this.innerHTML = '';
             this.appendChild(clone);
+
+            if (config.attributes && config.attributes.length) {
+                config.attributes.forEach(async (attribute: ComponentAttribute) => {
+                    if (!this.hasAttribute(attribute.key)) { this.setAttribute(attribute.key, attribute.value); }
+                });
+            }
+
             connectedCallback.call(this);
-            (async () => {
-                if ((this as Init).onInit) { await (this as Init).onInit(); }
-                if ((this as AfterInit).onAfterInit) { await (this as AfterInit).onAfterInit(); }
-            })();
+
+            if ((this as Init).onInit) { (this as Init).onInit(); }
+            if ((this as AfterInit).onAfterInit) { (this as AfterInit).onAfterInit(); }
         };
 
         constructor.prototype.disconnectedCallback = function(): void {
@@ -54,10 +65,6 @@ export function component<T>(config: ComponentConfig): (constructor: ComponentCo
         // tslint:enable:no-invalid-this
 
         window.customElements.define(config.selector, constructor);
+        return constructor;
     };
-}
-
-export async function componentFactory<T extends Component>(selector: string): Promise<T> {
-    const ctor = window.customElements.get(selector);
-    return await new ctor() as T;
 }

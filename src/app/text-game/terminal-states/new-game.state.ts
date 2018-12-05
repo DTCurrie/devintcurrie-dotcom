@@ -1,4 +1,4 @@
-import { Disposable } from 'lib/event-emitter';
+import { Disposable } from 'lib/emitters';
 import { State } from 'lib/state';
 
 import { TerminalState } from 'app/shared/terminal/terminal-state';
@@ -9,8 +9,16 @@ export class TextGameNewGameState extends TerminalState implements State {
         this.terminal.handleInput(input);
     });
 
-    public onEnter = async (): Promise<void> => (async () => {
+    public async onEnter(): Promise<void> {
         TerminalStateService.saveState({ module: 'text-game', key: 'new-game' });
+
+        if (!this.terminal.terminalWindow.classList.contains('show-input-helpers')) {
+            this.terminal.terminalWindow.classList.add('show-input-helpers');
+        }
+
+        if (!this.terminal.historyElement.classList.contains('show-title')) {
+            this.terminal.historyElement.classList.add('show-title');
+        }
 
         this.terminal.addLine(`
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae tellus elementum purus aliquam cursus. Donec nunc
@@ -33,7 +41,7 @@ export class TextGameNewGameState extends TerminalState implements State {
             false, [ 'prompt' ]);
 
         this.terminal.inputElement.focus();
-    })();
+    }
 
     public onExit(): void {
         this.terminal.clear();

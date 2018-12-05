@@ -25,15 +25,14 @@ const webpackConfig = {
     entry: {
         polyfills: './src/polyfills.ts',
         styles: './src/styles.ts',
-        main: './src/main.ts',
-        snake: './src/app/snake/snake.module',
-        textGame: './src/app/text-game/text-game.module',
+        main: './src/main.ts'
     },
     optimization: {
+        concatenateModules: true,
         usedExports: true,
         runtimeChunk: 'single',
         splitChunks: {
-            chunks: 'async',
+            chunks: 'all',
             name: true
         }
     },

@@ -2,12 +2,13 @@ import SimpleBar from 'simplebar';
 
 import { wait } from 'lib/async';
 import { Component, component } from 'lib/component';
-import { EventEmitter } from 'lib/event-emitter';
+import { TypedEventEmitter } from 'lib/emitters';
 import { StateMachine } from 'lib/state';
 
 import { TerminalIntroState } from 'app/intro.state';
 
-import { TextGameStartMenuState } from 'app/text-game/terminal-states';
+import { TextGameNewGameState, TextGameStartMenuState } from 'app/text-game/terminal-states';
+import { SnakeStartMenuState } from 'app/snake/terminal-states/start-menu.state';
 
 export interface TerminalHelper {
     command: string;
@@ -21,15 +22,13 @@ export interface TerminalHelper {
     stylesUrl: 'shared/terminal/terminal.component.scss'
 })
 export class Terminal extends Component implements Init {
-
     private simplebar: any;
-    private onStateChanged: MutationObserver = new MutationObserver((mutations: Array<MutationRecord>, observer: MutationObserver) => {
+    private onStateChanged: MutationObserver = new MutationObserver((mutations: Array<MutationRecord>, _observer: MutationObserver) =>
         mutations.forEach(async (mutation: MutationRecord) => {
             if (mutation.type !== 'attributes') { return; }
             if (!(mutation.attributeName === 'data-state-module' || mutation.attributeName === 'data-state-key')) { return; }
             await this.changeState();
-        });
-    });
+        }));
 
     public terminalWindow: HTMLElement;
     public historyElement: HTMLElement;
@@ -37,33 +36,46 @@ export class Terminal extends Component implements Init {
     public inputForm: HTMLFormElement;
     public inputElement: HTMLInputElement;
 
-    public onInput: EventEmitter<string> = new EventEmitter<string>();
+    public onInput: TypedEventEmitter<string> = new TypedEventEmitter<string>();
 
     public stateMachine: StateMachine = new StateMachine();
+
+    public initialized: boolean = +localStorage.getItem('devintcurrie:terminal-intitialized') === 1;
 
     public get historyContent(): Element { return this.simplebar.getContentElement(); }
     public get historyScroll(): Element { return this.simplebar.getScrollElement(); }
 
     private async changeState(): Promise<void> {
-        const stateModule = this.getAttribute('data-state-module');
-        const stateKey = this.getAttribute('data-state-key');
+        const stateModule = this.dataset.stateModule;
+        const stateKey = this.dataset.stateKey;
 
         if (stateModule === 'text-game') {
-            import(/* webpackChunkName: "textGame" */ 'app/text-game/text-game.module')
-                .then(() => {
-                    if (stateKey === 'start-menu') {
-                        this.stateMachine.transition(new TextGameStartMenuState(this));
-                        return;
-                    }
+            try {
+                await import(/* webpackChunkName: "textGame" */ 'app/text-game/text-game.module');
+                if (stateKey === 'start-menu') {
+                    this.stateMachine.transition(new TextGameStartMenuState(this));
+                    return;
+                }
 
-                    if (stateKey === 'new-game') {
-                        // terminal.stateMachine.transition(new TextGameNewGameState(this));
-                        this.stateMachine.transition(new TextGameStartMenuState(this));
-                        return;
-                    }
-                })
-                .catch((error: any) => `An error occurred while loading the text-game module. Returned ${error}`);
-            return;
+                if (stateKey === 'new-game') {
+                    this.stateMachine.transition(new TextGameNewGameState(this));
+                    return;
+                }
+            } catch (error) {
+                return console.error(`An error occurred while loading the text-game module. Returned ${error}`);
+            }
+        }
+
+        if (stateModule === 'snake') {
+            try {
+                await import(/* webpackChunkName: "snake" */ 'app/snake/snake.module');
+                if (stateKey === 'start-menu') {
+                    this.stateMachine.transition(new SnakeStartMenuState(this));
+                    return;
+                }
+            } catch (error) {
+                return console.error(`An error occurred while loading the snake module. Returned ${error}`);
+            }
         }
 
         this.stateMachine.transition(new TerminalIntroState(this));
@@ -167,7 +179,14 @@ export class Terminal extends Component implements Init {
             this.onInput.emit(this.inputElement.value);
         });
 
+        this.querySelector('.main-link').addEventListener('click', (ev: MouseEvent) => {
+            ev.preventDefault();
+            this.dataset.stateModule = 'app';
+            this.dataset.stateKey = 'intro';
+        });
+
         window.addEventListener('resize', (_ev: UIEvent) => this.updateDivider());
+
         this.changeState();
     }
 }

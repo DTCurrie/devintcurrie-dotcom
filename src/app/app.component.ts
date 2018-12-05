@@ -3,10 +3,6 @@ import { Component, component } from 'lib/component';
 import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
 import { Terminal } from 'app/shared/terminal/terminal.component';
 
-import { TextGameStartMenuState } from 'app/text-game/terminal-states';
-
-import { TerminalIntroState } from 'app/intro.state';
-
 @component({
     selector: 'app-root',
     template: `
