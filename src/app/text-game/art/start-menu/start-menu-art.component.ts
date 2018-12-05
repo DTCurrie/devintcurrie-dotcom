@@ -5,4 +5,4 @@ import { Component, component } from 'lib/component';
     templateUrl: 'text-game/art/start-menu/start-menu-art.component.html',
     stylesUrl: 'text-game/art/start-menu/start-menu-art.component.scss'
 })
-export class StartMenuArt extends Component { }
+export class TextGameStartMenuArt extends Component { }

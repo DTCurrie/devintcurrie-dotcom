@@ -8,7 +8,7 @@ import { StateMachine } from 'lib/state';
 import { TerminalIntroState } from 'app/intro.state';
 
 import { TextGameNewGameState, TextGameStartMenuState } from 'app/text-game/terminal-states';
-import { SnakeStartMenuState } from 'app/snake/terminal-states/start-menu.state';
+import { SnakeNewGameState, SnakeStartMenuState } from 'app/snake/terminal-states';
 
 export interface TerminalHelper {
     command: string;
@@ -71,6 +71,11 @@ export class Terminal extends Component implements Init {
                 await import(/* webpackChunkName: "snake" */ 'app/snake/snake.module');
                 if (stateKey === 'start-menu') {
                     this.stateMachine.transition(new SnakeStartMenuState(this));
+                    return;
+                }
+
+                if (stateKey === 'new-game') {
+                    this.stateMachine.transition(new SnakeNewGameState(this));
                     return;
                 }
             } catch (error) {
