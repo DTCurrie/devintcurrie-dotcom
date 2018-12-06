@@ -2,7 +2,7 @@ import { Component, component } from 'lib/component';
 import { GridTileTypes } from 'app/snake/grid/grid-tile/grid-tile-types.enum';
 
 @component({
-    selector: 'snake-grid-tile',
+    selector: 'app-snake-grid-tile',
     template: '<div class="grid-tile"><div class="grid-tile-content"></div></div>',
     stylesUrl: 'snake/grid/grid-tile/grid-tile.component.scss'
 })

@@ -1,6 +1,4 @@
 import { wait } from 'lib/async';
-import { Disposable } from 'lib/emitters';
-import { State } from 'lib/state';
 
 import { TerminalState } from 'app/shared/terminal/terminal-state';
 import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
@@ -22,7 +20,7 @@ export class TextGameStartMenuState extends TerminalState implements State {
         }
 
         if (input.match(/^skip$/i)) {
-            this.terminal.addLine('Skip game!', false, [ 'prompt' ]);
+            window.location.href = `${window.location.href}/site.html`;
             return;
         }
 

@@ -1,5 +1,3 @@
-import { State } from 'lib/state';
-
 import { TerminalState } from 'app/shared/terminal/terminal-state';
 import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
 
@@ -20,7 +18,7 @@ export class SnakeNewGameState extends TerminalState implements State {
         this.terminal.inputElement.disabled = true;
 
         this.terminal.addSpace();
-        this.terminal.historyContent.append(document.createElement('snake-grid'));
+        this.terminal.historyContent.append(document.createElement('app-snake-grid'));
         this.terminal.addSpace();
     }
 

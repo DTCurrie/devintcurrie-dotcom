@@ -13,13 +13,15 @@ export function component<T extends HTMLElement>(config: ComponentConfig): (cons
     return async (constructor: ComponentConstructor<T>) => {
         validateComponent(config);
 
+        const moduleName = config.selector.split('-')[ 0 ];
+
         const connectedCallback = constructor.prototype.connectedCallback || (() => { return; });
         const disconnectedCallback = constructor.prototype.disconnectedCallback || (() => { return; });
 
         if (config.styles || config.stylesUrl) {
             const styles: HTMLStyleElement = document.createElement('style');
 
-            if (config.stylesUrl) { styles.innerHTML += await import(`../app/${config.stylesUrl}`); }
+            if (config.stylesUrl) { styles.innerHTML += await import(`../${moduleName}/${config.stylesUrl}`); }
             if (config.styles) { styles.innerHTML += config.styles; }
 
             document.head.appendChild(styles);
@@ -31,7 +33,7 @@ export function component<T extends HTMLElement>(config: ComponentConfig): (cons
             const template: HTMLTemplateElement = document.createElement('template');
 
             if (config.templateUrl) {
-                template.innerHTML += await import(`../app/${config.templateUrl}`);
+                template.innerHTML += await import(`../${moduleName}/${config.templateUrl}`);
             } else if (config.template) {
                 template.innerHTML += config.template;
             } else {
@@ -43,10 +45,9 @@ export function component<T extends HTMLElement>(config: ComponentConfig): (cons
             this.innerHTML = '';
             this.appendChild(clone);
 
-            connectedCallback.call(this);
-
-            if ((this as Init).onInit) { (this as Init).onInit(); }
-            if ((this as AfterInit).onAfterInit) { (this as AfterInit).onAfterInit(); }
+            await connectedCallback.call(this);
+            if ((this as Init).onInit) { await (this as Init).onInit(); }
+            if ((this as AfterInit).onAfterInit) { await (this as AfterInit).onAfterInit(); }
         };
 
         constructor.prototype.disconnectedCallback = function(): void {

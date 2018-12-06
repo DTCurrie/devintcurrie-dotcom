@@ -1,5 +1,4 @@
 import { Terminal } from './terminal.component';
-import { State } from 'lib/state';
 
 export class TerminalState implements State {
     constructor(protected terminal: Terminal) { }

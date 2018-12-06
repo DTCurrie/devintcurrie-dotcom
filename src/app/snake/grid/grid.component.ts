@@ -8,7 +8,7 @@ import { GridTileTypes } from 'app/snake/grid/grid-tile/grid-tile-types.enum';
 import { GridCoordinates } from 'app/snake/grid/grid-coordinates';
 
 @component({
-    selector: 'snake-grid',
+    selector: 'app-snake-grid',
     template: `
         <div class="grid">
             <div class="score-container">score: <span class="score"></span></div>
@@ -160,7 +160,7 @@ export class Grid extends Component implements Init, Destroy {
 
         for (let y = 0; y < this.height; y++) {
             for (let x = 0; x < this.width; x++) {
-                const tile: GridTile = document.createElement('snake-grid-tile') as GridTile;
+                const tile: GridTile = document.createElement('app-snake-grid-tile') as GridTile;
                 tile.dataset.coordinatesX = `${x}`;
                 tile.dataset.coordinatesY = `${y}`;
                 gridTiles.appendChild<GridTile>(tile);

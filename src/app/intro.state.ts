@@ -1,6 +1,4 @@
 import { wait } from 'lib/async';
-import { Disposable } from 'lib/emitters';
-import { State } from 'lib/state';
 
 import { TerminalState } from 'app/shared/terminal/terminal-state';
 import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
@@ -22,7 +20,7 @@ export class TerminalIntroState extends TerminalState implements State {
         }
 
         if (input.match(/^skip|-s$/i)) {
-            this.terminal.addLine('Skip to site!', false, [ 'system' ]);
+            window.location.href = `${window.location.href}/site.html`;
             return;
         }
 
@@ -38,6 +36,7 @@ export class TerminalIntroState extends TerminalState implements State {
 
             if (command === 'site.exe') {
                 await this.terminal.addLine('run site.exe', false, [ 'prompt' ]);
+                window.location.href = `${window.location.href}/site.html`;
                 return;
             }
 
@@ -113,6 +112,15 @@ export class TerminalIntroState extends TerminalState implements State {
                 <li class="run-link">snake.exe</li>
             </ul>`,
             false, [ 'system' ]);
+
+        if (!this.terminal.terminalWindow.classList.contains('show-input-helpers')) {
+            this.terminal.terminalWindow.classList.add('show-input-helpers');
+        }
+
+        this.terminal.setHelpers([
+            { command: 'new' },
+            { command: 'skip' }
+        ]);
 
         this.terminal.historyContent.querySelectorAll<HTMLLIElement>('.run-link').forEach((link: HTMLLIElement) => {
             link.addEventListener('click', (ev: MouseEvent) => {

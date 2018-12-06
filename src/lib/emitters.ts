@@ -1,11 +1,3 @@
-
-export type Emitter = () => void;
-export type TypedEmitter<T> = (event: T) => void;
-
-export interface Disposable {
-    dispose(): void;
-}
-
 export class TypedEventEmitter<T> {
     private emitters: Array<TypedEmitter<T>> = [];
     private emissions: Array<TypedEmitter<T>> = [];
