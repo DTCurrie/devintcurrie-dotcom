@@ -25,14 +25,15 @@ const webpackConfig = {
     entry: {
         polyfills: './src/polyfills.ts',
         styles: './src/styles.ts',
-        main: './src/main.ts'
+        app: './src/app.ts',
+        site: './src/site.ts'
     },
     optimization: {
         concatenateModules: true,
         usedExports: true,
         runtimeChunk: 'single',
         splitChunks: {
-            chunks: 'all',
+            chunks: 'async',
             name: true
         }
     },
@@ -41,7 +42,14 @@ const webpackConfig = {
         new CleanWebpackPlugin([ 'dist' ]),
         new CopyWebpackPlugin([ { from: 'src/assets', to: 'assets' } ]),
         new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }),
-        new HtmlWebpackPlugin({ template: './src/index.html' }),
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: './src/index.html'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'site.html',
+            template: './src/site.html'
+        }),
         new MiniCssExtractPlugin({
             filename: "[name].[contenthash].css",
             chunkFilename: "[id].css"
@@ -50,7 +58,7 @@ const webpackConfig = {
     module: {
         rules: [
             {
-                test: /\.ts?$/,
+                test: /\.ts$/,
                 include: path.resolve(__dirname, 'src'),
                 use: [
                     { loader: 'cache-loader' },
