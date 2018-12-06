@@ -1,5 +1,5 @@
-import { TerminalState } from 'app/shared/terminal/terminal-state';
-import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
+import { TerminalState } from 'app/terminal/terminal-state';
+import { TerminalStateService } from 'app/terminal/terminal-state.service';
 
 import { SnakeNewGameState } from 'app/snake/terminal-states/new-game.state';
 

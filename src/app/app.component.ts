@@ -1,7 +1,7 @@
 import { Component, component } from 'lib/component';
 
-import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
-import { Terminal } from 'app/shared/terminal/terminal.component';
+import { TerminalStateService } from 'app/terminal/terminal-state.service';
+import { Terminal } from 'app/terminal/terminal.component';
 
 @component({
     selector: 'app-root',

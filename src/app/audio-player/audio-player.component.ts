@@ -16,7 +16,7 @@ import { Component, component } from 'lib/component';
                 <pre>Your browser does not support the audio element.</pre>
             </audio>
         </div>`,
-    stylesUrl: 'shared/audio-player/audio-player.component.scss'
+    stylesUrl: 'audio-player/audio-player.component.scss'
 })
 export class AudioPlayer extends Component implements Init {
 

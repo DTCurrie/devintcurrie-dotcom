@@ -1,5 +1,5 @@
-import { TerminalState } from 'app/shared/terminal/terminal-state';
-import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
+import { TerminalState } from 'app/terminal/terminal-state';
+import { TerminalStateService } from 'app/terminal/terminal-state.service';
 
 export class TextGameNewGameState extends TerminalState implements State {
     private inputHandler: Disposable = this.terminal.onInput.on(async (input: string) => {

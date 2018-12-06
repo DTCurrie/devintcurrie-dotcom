@@ -1,21 +1,3 @@
-@keyframes ellipsis {
-  0% {
-    content: "";
-  }
-  25% {
-    content: ".";
-  }
-  50% {
-    content: "..";
-  }
-  75% {
-    content: "...";
-  }
-  100% {
-    content: "";
-  }
-}
-
 @keyframes blink {
   0% {
     opacity: 1;

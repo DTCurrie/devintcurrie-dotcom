@@ -25,16 +25,22 @@ const webpackConfig = {
     entry: {
         polyfills: './src/polyfills.ts',
         styles: './src/styles.ts',
-        app: './src/app.ts',
-        site: './src/site.ts'
+        main: './src/main.ts'
     },
     optimization: {
         concatenateModules: true,
         usedExports: true,
         runtimeChunk: 'single',
         splitChunks: {
-            chunks: 'async',
-            name: true
+            chunks: 'all',
+            name: true,
+            cacheGroups: {
+                commons: {
+                    name: 'commons',
+                    chunks: 'initial',
+                    minChunks: 2
+                }
+            }
         }
     },
     plugins: [
@@ -58,7 +64,7 @@ const webpackConfig = {
     module: {
         rules: [
             {
-                test: /\.ts$/,
+                test: /(?<!\.module)\.ts$/,
                 include: path.resolve(__dirname, 'src'),
                 use: [
                     { loader: 'cache-loader' },
@@ -133,12 +139,13 @@ const webpackConfig = {
         plugins: [ new TsconfigPathsPlugin() ]
     },
     output: {
+        path: path.resolve(__dirname, 'dist'),
         filename: '[name].[hash].js',
-        path: path.resolve(__dirname, 'dist')
+        chunkFilename: '[name].chunk.[hash].js'
     },
     stats: {
         children: false,
-        warningsFilter: /(license-webpack-plugin|assets\/8bit_Dungeon_Level\.mp3)/
+        warningsFilter: /(license-webpack-plugin|thread-loader)/
     }
 };
 

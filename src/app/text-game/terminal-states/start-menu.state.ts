@@ -1,7 +1,7 @@
 import { wait } from 'lib/async';
 
-import { TerminalState } from 'app/shared/terminal/terminal-state';
-import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
+import { TerminalState } from 'app/terminal/terminal-state';
+import { TerminalStateService } from 'app/terminal/terminal-state.service';
 
 import { TextGameNewGameState } from 'app/text-game/terminal-states/new-game.state';
 
