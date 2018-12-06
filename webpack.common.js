@@ -64,8 +64,12 @@ const webpackConfig = {
     module: {
         rules: [
             {
-                test: /(?<!\.module)\.ts$/,
-                include: path.resolve(__dirname, 'src'),
+                test: /\.ts$/,
+                include: [
+                    path.resolve(__dirname, 'src', 'lib'),
+                    path.resolve(__dirname, 'src', 'app'),
+                    path.resolve(__dirname, 'src', 'site')
+                ],
                 use: [
                     { loader: 'cache-loader' },
                     {
@@ -78,7 +82,8 @@ const webpackConfig = {
                     {
                         loader: 'ts-loader',
                         options: {
-                            happyPackMode: true
+                            happyPackMode: true,
+                            transpileOnly: true
                         }
                     },
                     'tslint-loader'
@@ -86,7 +91,10 @@ const webpackConfig = {
             },
             {
                 test: /\.js$/,
-                include: path.resolve(__dirname, 'src'),
+                include: [
+                    path.resolve(__dirname, 'src', 'app'),
+                    path.resolve(__dirname, 'src', 'site')
+                ],
                 use: [
                     babelLoader
                 ]
@@ -124,7 +132,10 @@ const webpackConfig = {
             },
             {
                 test: /\.component\.scss$/,
-                include: path.resolve(__dirname, 'src'),
+                include: [
+                    path.resolve(__dirname, 'src', 'app'),
+                    path.resolve(__dirname, 'src', 'site')
+                ],
                 use: [
                     'css-to-string-loader',
                     { loader: 'css-loader', options: { importLoaders: 1 } },

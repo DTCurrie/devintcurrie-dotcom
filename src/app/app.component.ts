@@ -6,9 +6,9 @@ import { Terminal } from 'app/terminal/terminal.component';
 @component({
     selector: 'app-root',
     template: `
-    <main class="app">
+    <div class="app">
         <app-terminal></app-terminal>
-    </main>`,
+    </div>`,
     stylesUrl: 'app.component.scss'
 })
 export class App extends Component implements Init {
