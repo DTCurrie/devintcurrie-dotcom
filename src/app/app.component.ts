@@ -7,7 +7,6 @@ import { Terminal } from 'app/shared/terminal/terminal.component';
     selector: 'app-root',
     template: `
     <main class="app">
-        <a href="/site.html" data-route="site">TEST</a>
         <app-terminal></app-terminal>
     </main>`,
     stylesUrl: 'app.component.scss'

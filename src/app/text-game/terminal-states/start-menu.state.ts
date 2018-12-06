@@ -20,7 +20,7 @@ export class TextGameStartMenuState extends TerminalState implements State {
         }
 
         if (input.match(/^skip$/i)) {
-            this.terminal.addLine('Skip game!', false, [ 'prompt' ]);
+            window.location.href = `${window.location.href}/site.html`;
             return;
         }
 

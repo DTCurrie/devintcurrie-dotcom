@@ -13,7 +13,7 @@ export class SnakeStartMenuState extends TerminalState implements State {
         }
 
         if (input.match(/^skip$/i)) {
-            this.terminal.addLine('Skip game!', false, [ 'prompt' ]);
+            window.location.href = `${window.location.href}/site.html`;
             return;
         }
 
@@ -35,7 +35,7 @@ export class SnakeStartMenuState extends TerminalState implements State {
         this.terminal.inputElement.disabled = true;
 
         this.terminal.addSpace();
-        await this.terminal.addLine('<snake-start-menu-art></snake-start-menu-art>', false);
+        await this.terminal.addLine('<app-snake-start-menu-art></app-snake-start-menu-art>', false);
         await this.terminal.addLine(
             `Welcome to the classic Snake game! You play as the "@" snake, and your goal is to eat the "&" mice!  Don't worry, if you want
             to skip this and go right to my website, use the <span class="button">skip to website</span> button in the bottom-right corner
