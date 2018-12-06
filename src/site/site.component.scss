@@ -1,5 +1,15 @@
 @import "../styles/variables";
 
+$sidebar-width: 400px;
+$portrait-size: 300px;
+
+$content-padding-top: 410px;
+$content-padding-bottom: 50px;
+$content-padding-inner: 30px;
+$content-padding-outer: 76px;
+
+$breakpoint: 992px;
+
 @mixin text(
   $size: 18px,
   $weight: normal,
@@ -23,12 +33,11 @@
   @include text($size: 28px, $color: $color);
 }
 
-$sidebar-width: 400px;
-$portrait-size: 300px;
-$content-padding-top: 410px;
-$content-padding-bottom: 50px;
-$content-padding-inner: 30px;
-$content-padding-outer: 76px;
+@mixin breakpoint() {
+  @media only screen and (min-width: $breakpoint) {
+    @content;
+  }
+}
 
 .site {
   position: relative;
@@ -41,29 +50,61 @@ $content-padding-outer: 76px;
     width: 100%;
     margin: 0;
     border: none;
-    padding: 0 0 0 $sidebar-width;
+    padding: 0;
     overflow-x: hidden;
 
+    @include breakpoint() {
+      padding: 0 0 0 $sidebar-width;
+    }
+
     .information {
-      position: absolute;
+      position: relative;
       display: block;
       width: 100%;
-      top: 96px;
-      padding-left: #{$portrait-size/2 + 134px};
+      margin: 24px auto;
+      padding: 0;
+      text-align: center;
+
+      .title,
+      .subtitle {
+        text-align: center;
+      }
+
+      @include breakpoint() {
+        text-align: left;
+
+        .title,
+        .subtitle {
+          text-align: left;
+        }
+      }
+
+      @include breakpoint() {
+        position: absolute;
+        margin: 70px auto 0;
+        padding-left: #{$portrait-size/2 + 134px};
+      }
 
       .line {
         position: relative;
-        display: block;
-        width: 100%;
-        margin-top: 24px;
-        margin-bottom: 24px;
+        display: none;
+        margin: 24px auto;
         border-bottom: 1px solid $purple;
+
+        @include breakpoint() {
+          display: block;
+          width: 100%;
+        }
       }
     }
 
     .inner {
-      padding: $content-padding-top $content-padding-outer
-        $content-padding-bottom $content-padding-inner;
+      padding: 12px 10px;
+
+      @include breakpoint() {
+        padding: $content-padding-top $content-padding-outer
+          $content-padding-bottom $content-padding-inner;
+      }
 
       .main-section {
         position: relative;
@@ -85,27 +126,44 @@ $content-padding-outer: 76px;
             content: "";
             position: absolute;
             top: 20px;
-            left: #{$portrait-size/2 + 134px - $content-padding-inner};
+            margin-left: 20px;
             width: 100%;
             border-bottom: 1px solid $purple;
+
+            @include breakpoint() {
+              margin-left: 0;
+              left: #{$portrait-size/2 + 134px - $content-padding-inner};
+            }
           }
         }
 
         .main-section-content {
           position: relative;
           display: block;
-          margin-top: 32px;
+          margin-top: 24px;
+
+          @include breakpoint() {
+            margin-top: 32px;
+          }
 
           .main-section-content-left {
-            position: absolute;
+            position: relative;
             display: block;
-            padding-left: 34px;
+
+            @include breakpoint() {
+              position: absolute;
+              padding-left: 34px;
+            }
           }
 
           .main-section-content-right {
             position: relative;
             display: block;
-            padding-left: #{$portrait-size/2 + 134px - $content-padding-inner};
+            padding: 8px 8px 0;
+
+            @include breakpoint() {
+              padding: 0 0 0 #{$portrait-size/2 + 134px - $content-padding-inner};
+            }
           }
         }
       }
@@ -113,39 +171,55 @@ $content-padding-outer: 76px;
   }
 
   & &-portrait {
-    position: absolute;
+    position: relative;
     display: block;
-    top: 50px;
-    left: 250px;
+    top: 24px;
     width: 300px;
     height: 300px;
+    margin: 0 auto 24px;
     border-radius: 50%;
-    background-color: #fff;
+    background-color: transparent;
     background-image: url("/assets/portrait.jpg");
     background-repeat: no-repeat;
     background-position-x: -40px;
     background-position-y: -30px;
     z-index: 1050;
+
+    @include breakpoint() {
+      position: absolute;
+      left: 250px;
+    }
   }
 
   & &-sidebar {
-    position: absolute;
+    position: relative;
     display: block;
+    top: 0;
     left: 0;
-    width: $sidebar-width;
-    height: 100%;
+    width: 100%;
     margin: 0;
     border: none;
-    padding: $content-padding-top $content-padding-inner $content-padding-bottom
-      $content-padding-outer;
+    padding: 12px 10px;
     background-color: $gray;
+
+    @include breakpoint() {
+      position: absolute;
+      width: $sidebar-width;
+      height: 100%;
+      padding: $content-padding-top $content-padding-inner
+        $content-padding-bottom $content-padding-outer;
+    }
 
     .sidebar-line {
       position: absolute;
-      display: block;
+      display: none;
       width: 100px;
       top: 200px;
       border-bottom: 1px solid $purple;
+
+      @include breakpoint() {
+        display: block;
+      }
     }
 
     .sidebar-section {
@@ -167,6 +241,12 @@ $content-padding-outer: 76px;
           position: relative;
           display: block;
           width: 100%;
+          max-width: $sidebar-width;
+          margin: 0 auto;
+
+          @include breakpoint() {
+            max-width: 100%;
+          }
 
           .bar,
           .text {

@@ -3,11 +3,11 @@ window.addEventListener('load', async () => {
 
     try {
         if (window.location.href.match(/\/site.html$/)) {
-            await import(/* webpackChunkName: "site", webpackMode: "lazy" */ 'site/site.module');
+            await import(/* webpackChunkName: "site-module", webpackMode: "lazy" */ 'site/site.module');
             main.append(document.createElement('site-root'));
 
         } else {
-            await import(/* webpackChunkName: "app", webpackMode: "lazy" */ 'app/app.module');
+            await import(/* webpackChunkName: "site-module", webpackMode: "lazy" */ 'app/app.module');
             main.append(document.createElement('app-root'));
         }
 
