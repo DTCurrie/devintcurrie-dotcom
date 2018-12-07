@@ -1,6 +1,7 @@
 const path = require('path');
 
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -31,7 +32,7 @@ const webpackConfig = {
         usedExports: true,
         runtimeChunk: 'single',
         splitChunks: {
-            chunks: 'all',
+            chunks: 'async',
             name: true,
             cacheGroups: {
                 commons: {
@@ -45,6 +46,7 @@ const webpackConfig = {
     plugins: [
         new webpack.HashedModuleIdsPlugin(),
         new CleanWebpackPlugin([ 'dist' ]),
+        new CopyWebpackPlugin([ { from: 'src/assets', to: 'assets' } ]),
         new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }),
         new MiniCssExtractPlugin({ filename: "[name].[contenthash].css", chunkFilename: "[id].css" }),
 
@@ -83,16 +85,6 @@ const webpackConfig = {
                 ]
             },
             {
-                test: /\.js$/,
-                include: [
-                    path.resolve(__dirname, 'src', 'app'),
-                    path.resolve(__dirname, 'src', 'site')
-                ],
-                use: [
-                    babelLoader
-                ]
-            },
-            {
                 test: /\.html$/,
                 include: path.resolve(__dirname, 'src'),
                 use: [ {
@@ -103,15 +95,6 @@ const webpackConfig = {
                         collapseWhitespace: false
                     }
                 } ]
-            },
-            {
-                test: /\.css$/,
-                include: path.resolve(__dirname, 'src', 'assets'),
-                use: [
-                    process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
-                    { loader: 'css-loader', options: { importLoaders: 1 } },
-                    'postcss-loader'
-                ]
             },
             {
                 test: /\.scss$/,
@@ -137,7 +120,7 @@ const webpackConfig = {
                 ]
             },
             {
-                test: /\.(png|jpg|gif|mp3)$/i,
+                test: /\.(jpg|mp3)$/i,
                 include: path.resolve(__dirname, 'src', 'assets'),
                 use: [
                     {
