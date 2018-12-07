@@ -1,4 +1,4 @@
-import { Component, component } from 'lib/component';
+import { Component, component, Init } from 'lib/component';
 
 @component({
     selector: 'app-audio-player',

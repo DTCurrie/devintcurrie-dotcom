@@ -1,3 +1,6 @@
+import { Disposable } from 'lib/emitters';
+import { State } from 'lib/state';
+
 import { TerminalState } from 'app/terminal/terminal-state';
 import { TerminalStateService } from 'app/terminal/terminal-state.service';
 

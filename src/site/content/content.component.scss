@@ -1,127 +1,125 @@
 @import "../../styles/variables";
 @import "../../styles/mixins";
 
-site-content {
-  .content {
+site-content .content {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: 0;
+  border: none;
+  padding: 0;
+  overflow-x: hidden;
+
+  @include breakpoint() {
+    padding: 0 0 0 $sidebar-width;
+  }
+
+  .information {
     position: relative;
     display: block;
     width: 100%;
-    margin: 0;
-    border: none;
+    margin: 24px auto;
     padding: 0;
-    overflow-x: hidden;
+    text-align: center;
 
-    @include breakpoint() {
-      padding: 0 0 0 $sidebar-width;
+    .title,
+    .subtitle {
+      text-align: center;
     }
 
-    .information {
-      position: relative;
-      display: block;
-      width: 100%;
-      margin: 24px auto;
-      padding: 0;
-      text-align: center;
+    @include breakpoint() {
+      text-align: left;
 
       .title,
       .subtitle {
-        text-align: center;
-      }
-
-      @include breakpoint() {
         text-align: left;
-
-        .title,
-        .subtitle {
-          text-align: left;
-        }
-      }
-
-      @include breakpoint() {
-        position: absolute;
-        margin: 70px auto 0;
-        padding-left: #{$portrait-size/2 + 134px};
-      }
-
-      .line {
-        position: relative;
-        display: none;
-        margin: 24px auto;
-        border-bottom: 1px solid $purple;
-
-        @include breakpoint() {
-          display: block;
-          width: 100%;
-        }
       }
     }
 
-    .inner {
-      padding: 12px 10px;
+    @include breakpoint() {
+      position: absolute;
+      margin: 70px auto 0;
+      padding-left: #{$portrait-size/2 + 134px};
+    }
+
+    .line {
+      position: relative;
+      display: none;
+      margin: 24px auto;
+      border-bottom: 1px solid $purple;
 
       @include breakpoint() {
-        padding: $content-padding-top $content-padding-outer
-          $content-padding-bottom $content-padding-inner;
+        display: block;
+        width: 100%;
+      }
+    }
+  }
+
+  .inner {
+    padding: 12px 10px;
+
+    @include breakpoint() {
+      padding: $content-padding-top $content-padding-outer
+        $content-padding-bottom $content-padding-inner;
+    }
+
+    .main-section {
+      position: relative;
+      display: block;
+      width: 100%;
+      min-height: 148px;
+
+      &:not(:first-child) {
+        margin-top: 54px;
       }
 
-      .main-section {
+      .main-section-heading {
         position: relative;
         display: block;
         width: 100%;
-        min-height: 148px;
+        color: $purple;
 
-        &:not(:first-child) {
-          margin-top: 54px;
-        }
-
-        .main-section-heading {
-          position: relative;
-          display: block;
+        .heading:after {
+          content: "";
+          position: absolute;
+          top: 20px;
+          margin-left: 20px;
           width: 100%;
-          color: $purple;
-
-          .heading:after {
-            content: "";
-            position: absolute;
-            top: 20px;
-            margin-left: 20px;
-            width: 100%;
-            border-bottom: 1px solid $purple;
-
-            @include breakpoint() {
-              margin-left: 0;
-              left: #{$portrait-size/2 + 134px - $content-padding-inner};
-            }
-          }
-        }
-
-        .main-section-content {
-          position: relative;
-          display: block;
-          margin-top: 24px;
+          border-bottom: 1px solid $purple;
 
           @include breakpoint() {
-            margin-top: 32px;
+            margin-left: 0;
+            left: #{$portrait-size/2 + 134px - $content-padding-inner};
           }
+        }
+      }
 
-          .main-section-content-left {
-            position: relative;
-            display: block;
+      .main-section-content {
+        position: relative;
+        display: block;
+        margin-top: 24px;
 
-            @include breakpoint() {
-              position: absolute;
-              padding-left: 34px;
-            }
+        @include breakpoint() {
+          margin-top: 32px;
+        }
+
+        .main-section-content-left {
+          position: relative;
+          display: block;
+
+          @include breakpoint() {
+            position: absolute;
+            padding-left: 34px;
           }
+        }
 
-          .main-section-content-right {
-            position: relative;
-            display: block;
-            padding: 8px 8px 0;
+        .main-section-content-right {
+          position: relative;
+          display: block;
+          padding: 8px 8px 0;
 
-            @include breakpoint() {
-              padding: 0 0 0 #{$portrait-size/2 + 134px - $content-padding-inner};
-            }
+          @include breakpoint() {
+            padding: 0 0 0 #{$portrait-size/2 + 134px - $content-padding-inner};
           }
         }
       }

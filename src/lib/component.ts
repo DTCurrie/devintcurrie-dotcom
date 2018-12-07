@@ -1,3 +1,30 @@
+export interface ComponentConfig {
+    selector: string;
+    template?: string;
+    templateUrl?: string;
+    styles?: string;
+    stylesUrl?: string;
+}
+
+export interface Component extends HTMLElement {
+    connectedCallback?(): void;
+    disconnectedCallback?(): void;
+}
+
+export interface ComponentConstructor<T> { new(...args: Array<any>): T; }
+
+export interface Init extends Component {
+    onInit(): void;
+}
+
+export interface AfterInit extends Component {
+    onAfterInit(): void;
+}
+
+export interface Destroy extends Component {
+    onDestroy(): void;
+}
+
 export function validateComponent(config: ComponentConfig): void {
     if (config.selector.indexOf('-') <= 0) { throw new Error('Component selectors must include at least two dash ("-") words.'); }
     if (!config.template && !config.templateUrl) { throw new Error('Components require a template'); }

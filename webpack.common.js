@@ -1,7 +1,6 @@
 const path = require('path');
 
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -32,7 +31,7 @@ const webpackConfig = {
         usedExports: true,
         runtimeChunk: 'single',
         splitChunks: {
-            chunks: 'async',
+            chunks: 'all',
             name: true,
             cacheGroups: {
                 commons: {
@@ -46,7 +45,6 @@ const webpackConfig = {
     plugins: [
         new webpack.HashedModuleIdsPlugin(),
         new CleanWebpackPlugin([ 'dist' ]),
-        new CopyWebpackPlugin([ { from: 'src/assets', to: 'assets' } ]),
         new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }),
         new MiniCssExtractPlugin({ filename: "[name].[contenthash].css", chunkFilename: "[id].css" }),
 
@@ -108,7 +106,7 @@ const webpackConfig = {
             },
             {
                 test: /\.css$/,
-                include: path.resolve(__dirname, 'src'),
+                include: path.resolve(__dirname, 'src', 'assets'),
                 use: [
                     process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
                     { loader: 'css-loader', options: { importLoaders: 1 } },
@@ -116,11 +114,11 @@ const webpackConfig = {
                 ]
             },
             {
-                test: /(?<!\.component)\.scss$/,
-                include: path.resolve(__dirname, 'src'),
+                test: /\.scss$/,
+                include: path.resolve(__dirname, 'src', 'styles'),
                 use: [
                     process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
-                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                    { loader: 'css-loader', options: { importLoaders: 2 } },
                     'postcss-loader',
                     { loader: 'sass-loader', options: { workerParallelJobs: 2 } }
                 ]
@@ -133,9 +131,22 @@ const webpackConfig = {
                 ],
                 use: [
                     'css-to-string-loader',
-                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                    { loader: 'css-loader', options: { importLoaders: 2 } },
                     'postcss-loader',
                     { loader: 'sass-loader', options: { workerParallelJobs: 2 } }
+                ]
+            },
+            {
+                test: /\.(png|jpg|gif|mp3)$/i,
+                include: path.resolve(__dirname, 'src', 'assets'),
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            fallback: 'file-loader',
+                            limit: 8192
+                        }
+                    }
                 ]
             }
         ]

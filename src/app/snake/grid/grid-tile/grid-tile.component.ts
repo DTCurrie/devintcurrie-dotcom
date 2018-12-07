@@ -1,4 +1,4 @@
-import { Component, component } from 'lib/component';
+import { Component, component, Init } from 'lib/component';
 import { GridTileTypes } from 'app/snake/grid/grid-tile/grid-tile-types.enum';
 
 @component({

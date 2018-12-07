@@ -20,14 +20,14 @@
         "types": [
             "node",
             "webpack",
-            "webpack-env"
+            "webpack-env",
+            "simplebar"
         ]
     },
     "include": [
         "src/**/*"
     ],
     "exclude": [
-        "node_modules",
-        "**/*.spec.ts"
+        "node_modules"
     ]
 }

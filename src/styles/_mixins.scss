@@ -8,7 +8,6 @@
   $size: 18px,
   $weight: normal,
   $style: normal,
-  $line-height: 1.375,
   $align: left,
   $color: $font-color
 ) {
@@ -17,7 +16,6 @@
   font-weight: $weight;
   font-style: $style;
   font-stretch: normal;
-  line-height: $line-height;
   letter-spacing: normal;
   text-align: $align;
   color: $color;

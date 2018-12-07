@@ -1,12 +1,12 @@
 @import "../styles/variables";
 @import "../styles/mixins";
 
-.site {
+site-root .site {
   position: relative;
   width: 100%;
   @include text;
 
-  & &-portrait {
+  .site-portrait {
     position: relative;
     display: block;
     top: 24px;
@@ -32,12 +32,7 @@
   }
 
   .subtitle {
-    @include text(
-      $size: 18px,
-      $weight: bold,
-      $line-height: 1.333,
-      $color: $orange
-    );
+    @include text($size: 18px, $weight: bold, $color: $orange);
   }
 
   .heading {
@@ -45,7 +40,7 @@
   }
 
   .subheading {
-    @include text($size: 18px, $weight: bold, $line-height: 1.333);
+    @include text($size: 18px, $weight: bold);
 
     &-label {
       color: $green;

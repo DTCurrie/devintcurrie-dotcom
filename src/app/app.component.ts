@@ -1,4 +1,4 @@
-import { Component, component } from 'lib/component';
+import { Component, component, Init } from 'lib/component';
 
 import { TerminalStateService } from 'app/terminal/terminal-state.service';
 import { Terminal } from 'app/terminal/terminal.component';

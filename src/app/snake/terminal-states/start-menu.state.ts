@@ -1,3 +1,6 @@
+import { Disposable } from 'lib/emitters';
+import { State } from 'lib/state';
+
 import { TerminalState } from 'app/terminal/terminal-state';
 import { TerminalStateService } from 'app/terminal/terminal-state.service';
 
@@ -54,6 +57,7 @@ export class SnakeStartMenuState extends TerminalState implements State {
     }
 
     public onExit(to: State): void {
+        this.inputHandler.dispose();
         this.terminal.clear();
         this.terminal.helpersElement.innerHTML = '';
         this.terminal.historyElement.classList.remove('lock');

@@ -1,7 +1,7 @@
 import SimpleBar from 'simplebar';
 
 import { wait } from 'lib/async';
-import { Component, component } from 'lib/component';
+import { Component, component, Init } from 'lib/component';
 import { TypedEventEmitter } from 'lib/emitters';
 import { StateMachine } from 'lib/state';
 

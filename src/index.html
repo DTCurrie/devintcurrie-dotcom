@@ -5,7 +5,86 @@
 <head>
     <title>Devin T. Currie</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" type="text/css" href="assets/main.css">
+    <style>
+        @import url("https://fonts.googleapis.com/css?family=VT323");
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            width: 100%;
+            min-height: 100%;
+            font-family: sans-serif;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            min-height: 100%;
+            font-family: "VT323", monospace;
+            color: #f8f8f2;
+            text-align: left;
+            background-color: #272822;
+        }
+
+        main[role="main"].main {
+            width: 100%;
+            height: 100%;
+            min-height: 100%;
+        }
+
+        @keyframes ellipsis {
+            0% {
+                content: "";
+            }
+
+            25% {
+                content: ".";
+            }
+
+            50% {
+                content: "..";
+            }
+
+            75% {
+                content: "...";
+            }
+
+            100% {
+                content: "";
+            }
+        }
+
+        .loading:after {
+            display: inline-block;
+            animation: ellipsis steps(1, end) 1s infinite;
+            content: "";
+        }
+
+        .loader {
+            position: absolute;
+            display: flex;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            flex: 1 0 auto;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            background: #272822;
+            z-index: 1050;
+        }
+
+        .loader .loader-text {
+            color: #f8f8f2;
+            width: 72px;
+            font-family: "VT323", monospace, monospace;
+        }
+    </style>
 </head>
 
 <body>
