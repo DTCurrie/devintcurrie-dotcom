@@ -32,7 +32,7 @@ const webpackConfig = {
         usedExports: true,
         runtimeChunk: 'single',
         splitChunks: {
-            chunks: 'all',
+            chunks: 'async',
             name: true,
             cacheGroups: {
                 commons: {
@@ -48,18 +48,13 @@ const webpackConfig = {
         new CleanWebpackPlugin([ 'dist' ]),
         new CopyWebpackPlugin([ { from: 'src/assets', to: 'assets' } ]),
         new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }),
-        new HtmlWebpackPlugin({
-            filename: 'index.html',
-            template: './src/index.html'
-        }),
-        new HtmlWebpackPlugin({
-            filename: 'site.html',
-            template: './src/site.html'
-        }),
-        new MiniCssExtractPlugin({
-            filename: "[name].[contenthash].css",
-            chunkFilename: "[id].css"
-        })
+        new MiniCssExtractPlugin({ filename: "[name].[contenthash].css", chunkFilename: "[id].css" }),
+
+        // The base template is index.html, and main.ts checks the url and determines
+        // which module to load and inject. Each module needs to be declared here
+        // to ensure it gets it's own version of index.html, so routing works
+        new HtmlWebpackPlugin({ filename: 'index.html', template: './src/index.html' }),
+        new HtmlWebpackPlugin({ filename: 'site.html', template: './src/index.html' })
     ],
     module: {
         rules: [

@@ -1,174 +1,10 @@
 @import "../styles/variables";
-
-$sidebar-width: 400px;
-$portrait-size: 300px;
-
-$content-padding-top: 410px;
-$content-padding-bottom: 50px;
-$content-padding-inner: 30px;
-$content-padding-outer: 76px;
-
-$breakpoint: 992px;
-
-@mixin text(
-  $size: 18px,
-  $weight: normal,
-  $style: normal,
-  $line-height: 1.375,
-  $align: left,
-  $color: text
-) {
-  font-family: $font-family-monospace;
-  font-size: $size;
-  font-weight: $weight;
-  font-style: $style;
-  font-stretch: normal;
-  line-height: $line-height;
-  letter-spacing: normal;
-  text-align: $align;
-  color: $color;
-}
-
-@mixin heading($color: text) {
-  @include text($size: 28px, $color: $color);
-}
-
-@mixin breakpoint() {
-  @media only screen and (min-width: $breakpoint) {
-    @content;
-  }
-}
+@import "../styles/mixins";
 
 .site {
   position: relative;
   width: 100%;
-  font-family: $font-family-monospace;
-
-  & &-content {
-    position: relative;
-    display: block;
-    width: 100%;
-    margin: 0;
-    border: none;
-    padding: 0;
-    overflow-x: hidden;
-
-    @include breakpoint() {
-      padding: 0 0 0 $sidebar-width;
-    }
-
-    .information {
-      position: relative;
-      display: block;
-      width: 100%;
-      margin: 24px auto;
-      padding: 0;
-      text-align: center;
-
-      .title,
-      .subtitle {
-        text-align: center;
-      }
-
-      @include breakpoint() {
-        text-align: left;
-
-        .title,
-        .subtitle {
-          text-align: left;
-        }
-      }
-
-      @include breakpoint() {
-        position: absolute;
-        margin: 70px auto 0;
-        padding-left: #{$portrait-size/2 + 134px};
-      }
-
-      .line {
-        position: relative;
-        display: none;
-        margin: 24px auto;
-        border-bottom: 1px solid $purple;
-
-        @include breakpoint() {
-          display: block;
-          width: 100%;
-        }
-      }
-    }
-
-    .inner {
-      padding: 12px 10px;
-
-      @include breakpoint() {
-        padding: $content-padding-top $content-padding-outer
-          $content-padding-bottom $content-padding-inner;
-      }
-
-      .main-section {
-        position: relative;
-        display: block;
-        width: 100%;
-        min-height: 148px;
-
-        &:not(:first-child) {
-          margin-top: 54px;
-        }
-
-        .main-section-heading {
-          position: relative;
-          display: block;
-          width: 100%;
-          color: $purple;
-
-          .heading:after {
-            content: "";
-            position: absolute;
-            top: 20px;
-            margin-left: 20px;
-            width: 100%;
-            border-bottom: 1px solid $purple;
-
-            @include breakpoint() {
-              margin-left: 0;
-              left: #{$portrait-size/2 + 134px - $content-padding-inner};
-            }
-          }
-        }
-
-        .main-section-content {
-          position: relative;
-          display: block;
-          margin-top: 24px;
-
-          @include breakpoint() {
-            margin-top: 32px;
-          }
-
-          .main-section-content-left {
-            position: relative;
-            display: block;
-
-            @include breakpoint() {
-              position: absolute;
-              padding-left: 34px;
-            }
-          }
-
-          .main-section-content-right {
-            position: relative;
-            display: block;
-            padding: 8px 8px 0;
-
-            @include breakpoint() {
-              padding: 0 0 0 #{$portrait-size/2 + 134px - $content-padding-inner};
-            }
-          }
-        }
-      }
-    }
-  }
+  @include text;
 
   & &-portrait {
     position: relative;
@@ -191,108 +27,6 @@ $breakpoint: 992px;
     }
   }
 
-  & &-sidebar {
-    position: relative;
-    display: block;
-    top: 0;
-    left: 0;
-    width: 100%;
-    margin: 0;
-    border: none;
-    padding: 12px 10px;
-    background-color: $gray;
-
-    @include breakpoint() {
-      position: absolute;
-      width: $sidebar-width;
-      height: 100%;
-      padding: $content-padding-top $content-padding-inner
-        $content-padding-bottom $content-padding-outer;
-    }
-
-    .sidebar-line {
-      position: absolute;
-      display: none;
-      width: 100px;
-      top: 200px;
-      border-bottom: 1px solid $purple;
-
-      @include breakpoint() {
-        display: block;
-      }
-    }
-
-    .sidebar-section {
-      &:not(:last-child) {
-        margin-bottom: 20px;
-      }
-
-      .heading {
-        height: 50px;
-        color: $purple;
-      }
-
-      .content:not(:last-child) {
-        margin-bottom: 16px;
-      }
-
-      .content {
-        .item {
-          position: relative;
-          display: block;
-          width: 100%;
-          max-width: $sidebar-width;
-          margin: 0 auto;
-
-          @include breakpoint() {
-            max-width: 100%;
-          }
-
-          .bar,
-          .text {
-            position: relative;
-            display: inline-block;
-          }
-
-          .bar {
-            width: 140px;
-            height: 8px;
-            margin-top: 7px;
-            background-color: $black;
-            float: right;
-
-            &:before {
-              content: "";
-              position: absolute;
-              display: block;
-              left: 0;
-              height: 8px;
-            }
-
-            &.advanced:before {
-              background-color: $pink;
-              width: 120px;
-            }
-
-            &.proficient:before {
-              background-color: $orange;
-              width: 100px;
-            }
-
-            &.familiar:before {
-              background-color: $yellow;
-              width: 80px;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .text {
-    @include text;
-  }
-
   .title {
     @include text($size: 42px, $color: $pink);
   }
@@ -307,7 +41,7 @@ $breakpoint: 992px;
   }
 
   .heading {
-    @include heading;
+    @include text($size: 28px, $color: $purple);
   }
 
   .subheading {
@@ -316,11 +50,6 @@ $breakpoint: 992px;
     &-label {
       color: $green;
     }
-  }
-
-  .link {
-    @include text($color: $link-color);
-    text-decoration: underline;
   }
 
   .interests {
