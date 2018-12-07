@@ -47,7 +47,7 @@ site-sidebar .sidebar {
     display: block;
     width: 278px;
 
-    .content:not(:last-child) {
+    .content-wrapper .content:not(:last-child) {
       padding-bottom: 8px;
     }
 
@@ -56,8 +56,13 @@ site-sidebar .sidebar {
         left: 0;
         z-index: 1050;
       }
-      .content {
-        z-index: 1040;
+
+      .content-wrapper {
+        z-index: 1030;
+
+        .content {
+          z-index: 1040;
+        }
       }
     }
 
@@ -70,8 +75,12 @@ site-sidebar .sidebar {
           left: 0;
         }
       }
-      .content {
-        z-index: 1020;
+      .content-wrapper {
+        z-index: 1010;
+
+        .content {
+          z-index: 1020;
+        }
       }
     }
 
@@ -84,8 +93,27 @@ site-sidebar .sidebar {
           left: 0;
         }
       }
-      .content {
-        z-index: 1000;
+      .content-wrapper {
+        z-index: 990;
+
+        .content {
+          z-index: 1000;
+        }
+      }
+    }
+
+    &.active {
+      .heading {
+        z-index: 1070;
+        background-color: $gray;
+      }
+
+      .content-wrapper {
+        z-index: 1050;
+
+        .content {
+          z-index: 1060;
+        }
       }
     }
 
@@ -95,7 +123,7 @@ site-sidebar .sidebar {
         padding-bottom: 20px;
       }
 
-      .content:not(:last-child) {
+      .content-wrapper .content:not(:last-child) {
         padding-bottom: 16px;
       }
     }
@@ -108,7 +136,7 @@ site-sidebar .sidebar {
       border-right: 1px solid $purple;
       border-left: 1px solid $purple;
       padding: 0 4px 4px;
-      background-color: $gray;
+      background-color: $black;
       z-index: 1050;
 
       &:hover {
@@ -138,66 +166,74 @@ site-sidebar .sidebar {
       }
     }
 
-    .content {
+    .content-wrapper {
       position: relative;
       display: block;
+      height: 235px;
       background-color: $gray;
-      padding: 0px 4px;
 
-      &:nth-child(2) {
-        border-top: 1px solid $purple;
-      }
-
-      @include breakpoint() {
-        border: none;
-        padding: 0;
-
-        &:nth-child(2),
-        &:last-child {
-          border: none;
-        }
-      }
-
-      .item {
+      .content {
         position: relative;
         display: block;
-        width: 100%;
-        margin: 0 auto;
+        background-color: $gray;
+        padding: 0px 4px;
 
-        .bar,
-        .text {
-          position: relative;
-          display: inline-block;
+        &:first-child {
+          border-top: 1px solid $purple;
+          padding-top: 8px;
         }
 
-        .bar {
-          width: 140px;
-          height: 8px;
-          margin-top: 7px;
-          background-color: $black;
-          float: right;
+        @include breakpoint() {
+          border: none;
+          padding: 0;
 
-          &:before {
-            content: "";
-            position: absolute;
-            display: block;
-            left: 0;
+          &:first-child,
+          &:last-child {
+            border: none;
+          }
+        }
+
+        .item {
+          position: relative;
+          display: block;
+          width: 100%;
+          margin: 0 auto;
+
+          .bar,
+          .text {
+            position: relative;
+            display: inline-block;
+          }
+
+          .bar {
+            width: 140px;
             height: 8px;
-          }
+            margin-top: 7px;
+            background-color: $black;
+            float: right;
 
-          &.advanced:before {
-            background-color: $pink;
-            width: 120px;
-          }
+            &:before {
+              content: "";
+              position: absolute;
+              display: block;
+              left: 0;
+              height: 8px;
+            }
 
-          &.proficient:before {
-            background-color: $orange;
-            width: 100px;
-          }
+            &.advanced:before {
+              background-color: $pink;
+              width: 120px;
+            }
 
-          &.familiar:before {
-            background-color: $yellow;
-            width: 80px;
+            &.proficient:before {
+              background-color: $orange;
+              width: 100px;
+            }
+
+            &.familiar:before {
+              background-color: $yellow;
+              width: 80px;
+            }
           }
         }
       }
@@ -213,18 +249,16 @@ site-sidebar .sidebar {
   height: 40px;
   margin: 0;
   border: 0;
+  padding: 0;
   background-color: $gray;
   z-index: 1050;
 
   &:hover {
+    cursor: pointer;
     background-color: darken($gray, 3.25%);
 
-    &.open::after {
-      border-color: transparent transparent darken($pink, 7.5%) transparent;
-    }
-
-    &.close::after {
-      border-color: darken($pink, 7.5%) transparent transparent transparent;
+    .bar {
+      background-color: darken($pink, 7.5%);
     }
   }
 
@@ -233,25 +267,11 @@ site-sidebar .sidebar {
     outline: none;
   }
 
-  &.open::after {
-    border-width: 0 0 30px 30px;
-    border-color: transparent transparent $pink transparent;
-  }
-
-  &.close::after {
-    border-width: 30px 30px 0 0;
-    border-color: $pink transparent transparent transparent;
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    display: block;
-    width: 0;
-    height: 0;
-    bottom: 4px;
-    right: 4px;
-    border-style: solid;
+  .bar {
+    width: 30px;
+    height: 5px;
+    background-color: $pink;
+    margin: 6px auto;
   }
 
   @include breakpoint() {
