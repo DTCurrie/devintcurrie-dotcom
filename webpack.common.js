@@ -10,13 +10,13 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const webpack = require('webpack');
 
 const packageJson = require('./package.json');
-const vendorDependencies = Object.keys(packageJson[ 'dependencies' ]);
+const vendorDependencies = Object.keys(packageJson['dependencies']);
 
 const babelLoader = {
     loader: 'babel-loader',
     options: {
         cacheDirectory: true,
-        presets: [ '@babel/preset-env' ]
+        presets: ['@babel/preset-env']
     }
 };
 
@@ -45,28 +45,42 @@ const webpackConfig = {
     },
     plugins: [
         new webpack.HashedModuleIdsPlugin(),
-        new CleanWebpackPlugin([ 'dist' ]),
-        new CopyWebpackPlugin([ { from: 'src/assets', to: 'assets' } ]),
-        new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }),
-        new MiniCssExtractPlugin({ filename: "[name].[contenthash].css", chunkFilename: "[id].css" }),
+        new CleanWebpackPlugin(['dist']),
+        new CopyWebpackPlugin([{
+            from: 'src/assets',
+            to: 'assets'
+        }]),
+        new ForkTsCheckerWebpackPlugin({
+            checkSyntacticErrors: true
+        }),
+        new MiniCssExtractPlugin({
+            filename: "[name].[contenthash].css",
+            chunkFilename: "[id].css"
+        }),
 
         // The base template is index.html, and main.ts checks the url and determines
         // which module to load and inject. Each module needs to be declared here
         // to ensure it gets it's own version of index.html, so routing works
-        new HtmlWebpackPlugin({ filename: 'index.html', template: './src/index.html' }),
-        new HtmlWebpackPlugin({ filename: 'site.html', template: './src/index.html' })
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: './src/index.html'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'site.html',
+            template: './src/index.html'
+        })
     ],
     module: {
-        rules: [
-            {
+        rules: [{
                 test: /\.ts$/,
                 include: [
                     path.resolve(__dirname, 'src', 'lib'),
                     path.resolve(__dirname, 'src', 'app'),
                     path.resolve(__dirname, 'src', 'site')
                 ],
-                use: [
-                    { loader: 'cache-loader' },
+                use: [{
+                        loader: 'cache-loader'
+                    },
                     {
                         loader: 'thread-loader',
                         options: {
@@ -87,23 +101,33 @@ const webpackConfig = {
             {
                 test: /\.html$/,
                 include: path.resolve(__dirname, 'src'),
-                use: [ {
+                use: [{
                     loader: 'html-loader',
                     options: {
                         minimize: true,
                         removeComments: false,
                         collapseWhitespace: false
                     }
-                } ]
+                }]
             },
             {
                 test: /\.scss$/,
                 include: path.resolve(__dirname, 'src', 'styles'),
                 use: [
                     process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
-                    { loader: 'css-loader', options: { importLoaders: 2 } },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            importLoaders: 2
+                        }
+                    },
                     'postcss-loader',
-                    { loader: 'sass-loader', options: { workerParallelJobs: 2 } }
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            workerParallelJobs: 2
+                        }
+                    }
                 ]
             },
             {
@@ -114,20 +138,17 @@ const webpackConfig = {
                 ],
                 use: [
                     'css-to-string-loader',
-                    { loader: 'css-loader', options: { importLoaders: 2 } },
-                    'postcss-loader',
-                    { loader: 'sass-loader', options: { workerParallelJobs: 2 } }
-                ]
-            },
-            {
-                test: /\.(jpg|mp3)$/i,
-                include: path.resolve(__dirname, 'src', 'assets'),
-                use: [
                     {
-                        loader: 'url-loader',
+                        loader: 'css-loader',
                         options: {
-                            fallback: 'file-loader',
-                            limit: 8192
+                            importLoaders: 2
+                        }
+                    },
+                    'postcss-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            workerParallelJobs: 2
                         }
                     }
                 ]
@@ -135,8 +156,8 @@ const webpackConfig = {
         ]
     },
     resolve: {
-        extensions: [ '.ts', '.js' ],
-        plugins: [ new TsconfigPathsPlugin() ]
+        extensions: ['.ts', '.js'],
+        plugins: [new TsconfigPathsPlugin()]
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -150,7 +171,7 @@ const webpackConfig = {
 };
 
 if (vendorDependencies && vendorDependencies.length) {
-    webpackConfig.entry[ 'vendor' ] = vendorDependencies;
+    webpackConfig.entry['vendor'] = vendorDependencies;
 }
 
 module.exports = webpackConfig;
