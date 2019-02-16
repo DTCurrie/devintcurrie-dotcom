@@ -25,8 +25,7 @@ site-sidebar .sidebar {
     left: 0;
     width: $sidebar-width;
     height: 100%;
-    padding: $content-padding-top $content-padding-inner $content-padding-bottom
-      $content-padding-outer;
+    padding: $content-padding-top $content-padding-inner $content-padding-bottom $content-padding-outer;
     z-index: 1040;
   }
 
@@ -75,6 +74,7 @@ site-sidebar .sidebar {
           left: 0;
         }
       }
+
       .content-wrapper {
         z-index: 1010;
 
@@ -93,6 +93,7 @@ site-sidebar .sidebar {
           left: 0;
         }
       }
+
       .content-wrapper {
         z-index: 990;
 
@@ -119,6 +120,7 @@ site-sidebar .sidebar {
 
     @include breakpoint() {
       position: relative;
+
       &:not(:last-child) {
         padding-bottom: 20px;
       }
@@ -159,6 +161,7 @@ site-sidebar .sidebar {
         height: 50px;
         border: none;
         padding: 0;
+        background-color: $gray;
 
         &:hover {
           cursor: default;

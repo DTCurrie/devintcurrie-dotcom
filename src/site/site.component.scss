@@ -32,7 +32,7 @@ site-root .site {
   }
 
   .subtitle {
-    @include text($size: 18px, $weight: bold, $color: $orange);
+    @include text($size: 18px, $color: $orange);
   }
 
   .heading {
@@ -40,7 +40,7 @@ site-root .site {
   }
 
   .subheading {
-    @include text($size: 18px, $weight: bold);
+    @include text($size: 18px);
 
     &-label {
       color: $green;

@@ -6,7 +6,7 @@
   width: 100%;
   height: 100%;
   margin: 0 auto;
-  padding: 3rem;
+  padding: 2rem 2rem 3rem;
 
   .terminal-window {
     position: relative;
@@ -62,7 +62,7 @@
       }
 
       &.show-title {
-        padding-top: 72px;
+        padding-top: 50px;
 
         .line.title {
           display: block;
@@ -132,7 +132,7 @@
       .header {
         position: absolute;
         display: none;
-        top: 24px;
+        top: 8px;
         left: 0;
         width: 100%;
         font-size: 24px;
