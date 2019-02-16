@@ -1,12 +1,11 @@
 import SimpleBar from 'simplebar';
 
 import { wait } from 'lib/async';
-import { Component, component } from 'lib/component';
+import { Component, component, Init } from 'lib/component';
 import { TypedEventEmitter } from 'lib/emitters';
 import { StateMachine } from 'lib/state';
 
 import { TerminalIntroState } from 'app/intro.state';
-
 import { TextGameNewGameState, TextGameStartMenuState } from 'app/text-game/terminal-states';
 import { SnakeNewGameState, SnakeStartMenuState } from 'app/snake/terminal-states';
 
@@ -18,8 +17,8 @@ export interface TerminalHelper {
 
 @component({
     selector: 'app-terminal',
-    templateUrl: 'shared/terminal/terminal.component.html',
-    stylesUrl: 'shared/terminal/terminal.component.scss'
+    templateUrl: 'terminal/terminal.component.html',
+    stylesUrl: 'terminal/terminal.component.scss'
 })
 export class Terminal extends Component implements Init {
     private simplebar: any;

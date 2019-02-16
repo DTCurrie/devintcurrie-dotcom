@@ -1,4 +1,5 @@
 import { stringify } from 'lib/json';
+import { StateData } from 'lib/state';
 
 export class TerminalStateService {
     private static readonly storageKey = 'devintcurrie:terminal-state';

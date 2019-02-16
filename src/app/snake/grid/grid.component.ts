@@ -1,4 +1,4 @@
-import { Component, component } from 'lib/component';
+import { Component, component, Destroy, Init } from 'lib/component';
 
 import { InputService, MoveDirection } from 'app/snake/input.service';
 import { EventEmitter } from 'lib/emitters';

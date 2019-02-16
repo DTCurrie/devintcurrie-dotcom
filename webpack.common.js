@@ -10,13 +10,13 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const webpack = require('webpack');
 
 const packageJson = require('./package.json');
-const vendorDependencies = Object.keys(packageJson[ 'dependencies' ]);
+const vendorDependencies = Object.keys(packageJson['dependencies']);
 
 const babelLoader = {
     loader: 'babel-loader',
     options: {
         cacheDirectory: true,
-        presets: [ '@babel/preset-env' ]
+        presets: ['@babel/preset-env']
     }
 };
 
@@ -25,8 +25,7 @@ const webpackConfig = {
     entry: {
         polyfills: './src/polyfills.ts',
         styles: './src/styles.ts',
-        app: './src/app.ts',
-        site: './src/site.ts'
+        main: './src/main.ts'
     },
     optimization: {
         concatenateModules: true,
@@ -34,34 +33,54 @@ const webpackConfig = {
         runtimeChunk: 'single',
         splitChunks: {
             chunks: 'async',
-            name: true
+            name: true,
+            cacheGroups: {
+                commons: {
+                    name: 'commons',
+                    chunks: 'initial',
+                    minChunks: 2
+                }
+            }
         }
     },
     plugins: [
         new webpack.HashedModuleIdsPlugin(),
-        new CleanWebpackPlugin([ 'dist' ]),
-        new CopyWebpackPlugin([ { from: 'src/assets', to: 'assets' } ]),
-        new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }),
+        new CleanWebpackPlugin(['dist']),
+        new CopyWebpackPlugin([{
+            from: 'src/assets',
+            to: 'assets'
+        }]),
+        new ForkTsCheckerWebpackPlugin({
+            checkSyntacticErrors: true
+        }),
+        new MiniCssExtractPlugin({
+            filename: "[name].[contenthash].css",
+            chunkFilename: "[id].css"
+        }),
+
+        // The base template is index.html, and main.ts checks the url and determines
+        // which module to load and inject. Each module needs to be declared here
+        // to ensure it gets it's own version of index.html, so routing works
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: './src/index.html'
         }),
         new HtmlWebpackPlugin({
             filename: 'site.html',
-            template: './src/site.html'
-        }),
-        new MiniCssExtractPlugin({
-            filename: "[name].[contenthash].css",
-            chunkFilename: "[id].css"
+            template: './src/index.html'
         })
     ],
     module: {
-        rules: [
-            {
+        rules: [{
                 test: /\.ts$/,
-                include: path.resolve(__dirname, 'src'),
-                use: [
-                    { loader: 'cache-loader' },
+                include: [
+                    path.resolve(__dirname, 'src', 'lib'),
+                    path.resolve(__dirname, 'src', 'app'),
+                    path.resolve(__dirname, 'src', 'site')
+                ],
+                use: [{
+                        loader: 'cache-loader'
+                    },
                     {
                         loader: 'thread-loader',
                         options: {
@@ -72,78 +91,87 @@ const webpackConfig = {
                     {
                         loader: 'ts-loader',
                         options: {
-                            happyPackMode: true
+                            happyPackMode: true,
+                            transpileOnly: true
                         }
                     },
                     'tslint-loader'
                 ]
             },
             {
-                test: /\.js$/,
-                include: path.resolve(__dirname, 'src'),
-                use: [
-                    babelLoader
-                ]
-            },
-            {
                 test: /\.html$/,
                 include: path.resolve(__dirname, 'src'),
-                use: [ {
+                use: [{
                     loader: 'html-loader',
                     options: {
                         minimize: true,
                         removeComments: false,
                         collapseWhitespace: false
                     }
-                } ]
+                }]
             },
             {
-                test: /\.css$/,
-                include: path.resolve(__dirname, 'src'),
+                test: /\.scss$/,
+                include: path.resolve(__dirname, 'src', 'styles'),
                 use: [
                     process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
-                    { loader: 'css-loader', options: { importLoaders: 1 } },
-                    'postcss-loader'
-                ]
-            },
-            {
-                test: /(?<!\.component)\.scss$/,
-                include: path.resolve(__dirname, 'src'),
-                use: [
-                    process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
-                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            importLoaders: 2
+                        }
+                    },
                     'postcss-loader',
-                    { loader: 'sass-loader', options: { workerParallelJobs: 2 } }
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            workerParallelJobs: 2
+                        }
+                    }
                 ]
             },
             {
                 test: /\.component\.scss$/,
-                include: path.resolve(__dirname, 'src'),
+                include: [
+                    path.resolve(__dirname, 'src', 'app'),
+                    path.resolve(__dirname, 'src', 'site')
+                ],
                 use: [
                     'css-to-string-loader',
-                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            importLoaders: 2
+                        }
+                    },
                     'postcss-loader',
-                    { loader: 'sass-loader', options: { workerParallelJobs: 2 } }
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            workerParallelJobs: 2
+                        }
+                    }
                 ]
             }
         ]
     },
     resolve: {
-        extensions: [ '.ts', '.js' ],
-        plugins: [ new TsconfigPathsPlugin() ]
+        extensions: ['.ts', '.js'],
+        plugins: [new TsconfigPathsPlugin()]
     },
     output: {
+        path: path.resolve(__dirname, 'dist'),
         filename: '[name].[hash].js',
-        path: path.resolve(__dirname, 'dist')
+        chunkFilename: '[name].chunk.[hash].js'
     },
     stats: {
         children: false,
-        warningsFilter: /(license-webpack-plugin|assets\/8bit_Dungeon_Level\.mp3)/
+        warningsFilter: /(license-webpack-plugin|thread-loader)/
     }
 };
 
 if (vendorDependencies && vendorDependencies.length) {
-    webpackConfig.entry[ 'vendor' ] = vendorDependencies;
+    webpackConfig.entry['vendor'] = vendorDependencies;
 }
 
 module.exports = webpackConfig;

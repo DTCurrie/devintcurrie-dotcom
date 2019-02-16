@@ -1,0 +1,22 @@
+@mixin breakpoint() {
+  @media only screen and (min-width: $breakpoint) {
+    @content;
+  }
+}
+
+@mixin text(
+  $size: 18px,
+  $weight: normal,
+  $style: normal,
+  $align: left,
+  $color: $font-color
+) {
+  font-family: $font-family-monospace;
+  font-size: $size;
+  font-weight: $weight;
+  font-style: $style;
+  font-stretch: normal;
+  letter-spacing: normal;
+  text-align: $align;
+  color: $color;
+}

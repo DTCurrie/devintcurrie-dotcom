@@ -1,3 +1,5 @@
+import { State } from 'lib/state';
+
 import { Terminal } from './terminal.component';
 
 export class TerminalState implements State {

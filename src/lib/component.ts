@@ -1,3 +1,30 @@
+export interface ComponentConfig {
+    selector: string;
+    template?: string;
+    templateUrl?: string;
+    styles?: string;
+    stylesUrl?: string;
+}
+
+export interface Component extends HTMLElement {
+    connectedCallback?(): void;
+    disconnectedCallback?(): void;
+}
+
+export interface ComponentConstructor<T> { new(...args: Array<any>): T; }
+
+export interface Init extends Component {
+    onInit(): void;
+}
+
+export interface AfterInit extends Component {
+    onAfterInit(): void;
+}
+
+export interface Destroy extends Component {
+    onDestroy(): void;
+}
+
 export function validateComponent(config: ComponentConfig): void {
     if (config.selector.indexOf('-') <= 0) { throw new Error('Component selectors must include at least two dash ("-") words.'); }
     if (!config.template && !config.templateUrl) { throw new Error('Components require a template'); }
@@ -19,21 +46,26 @@ export function component<T extends HTMLElement>(config: ComponentConfig): (cons
         const disconnectedCallback = constructor.prototype.disconnectedCallback || (() => { return; });
 
         if (config.styles || config.stylesUrl) {
-            const styles: HTMLStyleElement = document.createElement('style');
+            const stylesElement: HTMLStyleElement = document.createElement('style');
 
-            if (config.stylesUrl) { styles.innerHTML += await import(`../${moduleName}/${config.stylesUrl}`); }
-            if (config.styles) { styles.innerHTML += config.styles; }
+            if (config.stylesUrl) {
 
-            document.head.appendChild(styles);
+                const styles: { default: string } = await import(`../${moduleName}/${config.stylesUrl}`);
+                stylesElement.innerHTML += styles.default;
+            }
+            if (config.styles) { stylesElement.innerHTML += config.styles; }
+
+            document.head.appendChild(stylesElement);
         }
 
-        // we need to use this outside of class body (since we are inside a constructor function), so disbale tslint
+        // we need to use this outside of class body (since we are inside a constructor function), so disable tslint
         // tslint:disable:no-invalid-this
         constructor.prototype.connectedCallback = async function(): Promise<void> {
             const template: HTMLTemplateElement = document.createElement('template');
 
             if (config.templateUrl) {
-                template.innerHTML += await import(`../${moduleName}/${config.templateUrl}`);
+                const html: { default: string } = await import(`../${moduleName}/${config.templateUrl}`);
+                template.innerHTML += html.default;
             } else if (config.template) {
                 template.innerHTML += config.template;
             } else {

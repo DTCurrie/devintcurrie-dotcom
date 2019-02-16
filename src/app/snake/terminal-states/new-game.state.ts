@@ -1,5 +1,7 @@
-import { TerminalState } from 'app/shared/terminal/terminal-state';
-import { TerminalStateService } from 'app/shared/terminal/terminal-state.service';
+import { State } from 'lib/state';
+
+import { TerminalState } from 'app/terminal/terminal-state';
+import { TerminalStateService } from 'app/terminal/terminal-state.service';
 
 export class SnakeNewGameState extends TerminalState implements State {
     public async onEnter(): Promise<void> {

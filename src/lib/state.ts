@@ -1,3 +1,14 @@
+export interface State {
+    onEnter(from?: State): void | Promise<void>;
+    onExit(to?: State): void | Promise<void>;
+}
+
+export interface StateData {
+    module: string;
+    key: string;
+    data?: any;
+}
+
 export class StateMachine {
     private transitioning: boolean;
 

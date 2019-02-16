@@ -2,9 +2,10 @@
     "compileOnSave": false,
     "compilerOptions": {
         "baseUrl": "./src/",
-        "module": "commonJs",
-        "moduleResolution": "node",
-        "target": "es2015",
+        "module": "CommonJS",
+        "moduleResolution": "Node",
+        "esModuleInterop": true,
+        "target": "ES2015",
         "outDir": "./dist/",
         "sourceMap": true,
         "noImplicitAny": true,
@@ -19,14 +20,14 @@
         "types": [
             "node",
             "webpack",
-            "webpack-env"
+            "webpack-env",
+            "simplebar"
         ]
     },
     "include": [
         "src/**/*"
     ],
     "exclude": [
-        "node_modules",
-        "**/*.spec.ts"
+        "node_modules"
     ]
 }
